@@ -1,4 +1,16 @@
-module Enum where
+module Enum
+    ( Animal (..)
+    , Building (..)
+    , Knowledge (..)
+    , Color (..)
+    , HexTile (..)
+    , Dice (..)
+    , DiceAction (..)
+    , ShippingTile (..)
+    , Slot (..)
+    , getColor
+    , getAction
+    ) where
 
 data Animal = Cow | Pig | Chicken | Sheep
     deriving (Show, Eq)
