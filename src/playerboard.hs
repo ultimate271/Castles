@@ -1,26 +1,25 @@
 module PlayerBoard 
     ( PlayerBoard
-    , storage
+    , validState
     ) where
 
-import Enum (HexTile, ShippingTile, Slot)
-import Hex (Hex)
+import Enum
+import Hex (Hex, range, center)
 
 data PlayerBoard = PlayerBoard
     { storage :: [HexTile]
     , goodsStorage :: [ShippingTile]
-    , layout :: Hex.Hex -> Slot
-    , empire :: Hex.Hex -> HexTile
+    , layout :: Hex -> Slot
+    , empire :: Hex -> HexTile
     , silverling :: Int
     , worker :: Int
     , victoryTrack :: Int
     }
 
-storageSize = 3
-goodsStorageSize = 3
-hexRadius = 3
+slotFitHex :: Slot -> Hextile -> Bool
+slotFitHex (Slot {color}) h = color == (getColor h)
 
-validState :: PlayerBoard -> Bool
-validState pb = True
+validState :: Config -> PlayerBoard -> Bool
+validState cfg pb = True
 --Hidden
 

@@ -59,6 +59,11 @@ data Slot = Slot
     , dice :: Dice
     }
     deriving (Show)
+data Config = Config
+    { storageSize :: Int
+    , goodsStorageSize :: Int
+    , hexRadius :: Int
+    }
 
 
 getColor :: HexTile -> Color
