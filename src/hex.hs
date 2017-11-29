@@ -7,6 +7,8 @@ module Hex
 data Hex = Hex Int Int Int
     deriving (Show, Eq)
 
+--Just putting a comment.
+
 adjacent :: Hex -> [Hex]
 adjacent (Hex i j k) =
     [ Hex (i+1) (j-1) (k+0)
