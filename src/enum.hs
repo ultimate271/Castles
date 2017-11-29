@@ -1,16 +1,4 @@
-module Enum 
-    ( Animal (..)
-    , Building (..)
-    , Knowledge (..)
-    , Color (..)
-    , HexTile (..)
-    , Dice (..)
-    , DiceAction (..)
-    , ShippingTile (..)
-    , Slot (..)
-    , getColor
-    , getAction
-    ) where
+module Enum where
 
 data Animal = Cow | Pig | Chicken | Sheep
     deriving (Show, Eq)
@@ -34,7 +22,7 @@ data Color
     | Brown      -- Building
     | Yellow     -- Knowledge
     deriving (Show, Eq)
-data HexTile
+data Tile
     = Castle              -- Burgundy
     | Mine                -- Silver
     | Port                -- Blue
@@ -53,14 +41,14 @@ data DiceAction
     | MarketAction
     | CityHallAction
     deriving (Show)
-data ShippingTile = ShippingTile Dice
 data Slot = Slot
     { color :: Color
     , dice :: Dice
     }
     deriving (Show)
 
-getColor :: HexTile -> Color
+
+getColor :: Tile -> Color
 getColor Castle        = Burgundy
 getColor Mine          = Silver
 getColor Port          = Blue
@@ -68,7 +56,7 @@ getColor (Pasture _ _) = Green
 getColor (Building _)  = Brown
 getColor (Knowledge _) = Yellow
 
-getAction :: HexTile -> Maybe DiceAction
+getAction :: Tile -> Maybe DiceAction
 getAction Castle               = Just CastleAction
 getAction (Building Warehouse) = Just WarehouseAction
 getAction (Building Carpenter) = Just CarpenterAction

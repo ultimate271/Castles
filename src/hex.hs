@@ -1,8 +1,4 @@
-module Hex
-    ( Hex
-    , adjacent
-    , isAdjacent
-    ) where
+module Hex where
 
 data Hex = Hex Int Int
     deriving (Show, Eq)
