@@ -34,13 +34,19 @@ data Dice = Dice Int
     deriving (Show)
 data DiceAction
     = DiceAction Dice
-    | WarehouseAction
     | CastleAction
+    | WarehouseAction
     | CarpenterAction
     | ChurchAction
     | MarketAction
     | CityHallAction
     deriving (Show)
+data Slot = Slot
+    { color :: Color
+    , dice :: Dice
+    }
+    deriving (Show)
+
 
 getColor :: Tile -> Color
 getColor Castle        = Burgundy
