@@ -34,7 +34,7 @@ data Color
     | Brown      -- Building
     | Yellow     -- Knowledge
     deriving (Show, Eq)
-data Tile
+data HexTile
     = Castle              -- Burgundy
     | Mine                -- Silver
     | Port                -- Blue
@@ -44,6 +44,7 @@ data Tile
     deriving (Show)
 data Dice = Dice Int
     deriving (Show)
+data ShippingTile = ShippingTile Dice
 data DiceAction
     = DiceAction Dice
     | CastleAction
@@ -60,7 +61,7 @@ data Slot = Slot
     deriving (Show)
 
 
-getColor :: Tile -> Color
+getColor :: HexTile -> Color
 getColor Castle        = Burgundy
 getColor Mine          = Silver
 getColor Port          = Blue
@@ -68,7 +69,7 @@ getColor (Pasture _ _) = Green
 getColor (Building _)  = Brown
 getColor (Knowledge _) = Yellow
 
-getAction :: Tile -> Maybe DiceAction
+getAction :: HexTile -> Maybe DiceAction
 getAction Castle               = Just CastleAction
 getAction (Building Warehouse) = Just WarehouseAction
 getAction (Building Carpenter) = Just CarpenterAction
