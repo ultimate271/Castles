@@ -9,10 +9,9 @@ import Hex (Hex)
 data PlayerBoard = PlayerBoard
     { storage :: [HexTile]
     , goodsStorage :: [ShippingTile]
-    , layout :: Hex.Hex -> Slot
-    , empire :: Hex.Hex -> HexTile
-    , silverling :: Int
-    , worker :: Int
+    , board = Hex -> Either Space Hextile
+    , silverlingCount :: Int
+    , workerCount :: Int
     , victoryTrack :: Int
     }
 
