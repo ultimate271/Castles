@@ -12,3 +12,7 @@ F0003 - Add PlayerActions
 playeraction.hs
 
 enum.hs
+
+F0004 - Add Log
+================================================================================
+log.hs
