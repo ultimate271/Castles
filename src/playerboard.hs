@@ -4,7 +4,7 @@ module PlayerBoard
     ) where
 
 import Enum (HexTile, ShippingTile, Slot)
-import Hex (Hex)
+import Hex (Hex, Axial)
 
 data PlayerBoard = PlayerBoard
     { storage :: [HexTile]
