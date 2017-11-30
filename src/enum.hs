@@ -8,7 +8,6 @@ module Enum
     , DiceAction (..)
     , ShippingTile (..)
     , Slot (..)
-    , PlayerAction (..)
     , Player (..)
     , Config (..)
     , getColor
@@ -86,13 +85,6 @@ data Slot = Slot
     { color :: Color
     , dice :: Dice
     } deriving (Show)
-data PlayerAction
-    = PullTile DiceAction Hextile
-    | PushTile DiceAction Hextile HexLoc
-    | DoShip DiceAction
-    | Exchange DiceAction
-    | Buy Hextile
-    deriving (Show, Eq)
 data Player = Player Int
 data Config = Config
     { storageSize :: Int
@@ -111,10 +103,10 @@ getColor (Building _)  = Brown
 getColor (Knowledge _) = Yellow
 
 getAction :: HexTile -> Maybe DiceAction
-getAction Castle               = Just CastleAction
-getAction (Building Warehouse) = Just WarehouseAction
-getAction (Building Carpenter) = Just CarpenterAction
-getAction (Building Church)    = Just ChurchAction
-getAction (Building Market)    = Just MarketAction
-getAction (Building CityHall)  = Just CityHallAction
+getAction Castle               = Just Free
+getAction (Building Warehouse) = Just Ship
+getAction (Building Carpenter) = Just (Pull [Brown])
+getAction (Building Church)    = Just (Pull [Burgundy, Silver, Yellow])
+getAction (Building Market)    = Just (Pull [Blue, Green])
+getAction (Building CityHall)  = Just Push
 getAction _                    = Nothing
