@@ -9,6 +9,7 @@ module Enum
     , ShippingTile (..)
     , Slot (..)
     , PlayerAction (..)
+    , Player (..)
     , getColor
     , getAction
     ) where
@@ -92,6 +93,7 @@ data PlayerAction
     | Exchange DiceAction
     | Buy Hextile
     deriving (Show, Eq)
+data Player = Player Int
 
 
 getColor :: HexTile -> Color

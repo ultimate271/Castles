@@ -6,3 +6,9 @@ F0002 - Add State Functionality
 ================================================================================
 Add the data types and functions neccesary to represent or alter the state
 of the game.
+
+F0003 - Add PlayerActions
+================================================================================
+playeraction.hs
+
+enum.hs
