@@ -1,10 +1,10 @@
-module PlayerAcition where
+module PlayerAction where
 
 import Enum
 import Hex
 
 data PlayerAction
-    = Drow Player Dice HexTile
+    = Draw Player Dice HexTile
     | Place Player Dice Hex HexTile
     | Ship Player HexTile
     | Buy Player Dice
