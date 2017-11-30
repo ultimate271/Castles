@@ -3,16 +3,15 @@ module PlayerBoard
     , validState
     ) where
 
-import Enum
-import Hex (Hex, range, center)
+import Enum (HexTile, ShippingTile, Slot)
+import Hex (Hex, Axial)
 
 data PlayerBoard = PlayerBoard
     { storage :: [HexTile]
     , goodsStorage :: [ShippingTile]
-    , layout :: Hex -> Slot
-    , empire :: Hex -> HexTile
-    , silverling :: Int
-    , worker :: Int
+    , board = Hex -> Either Space Hextile
+    , silverlingCount :: Int
+    , workerCount :: Int
     , victoryTrack :: Int
     }
 

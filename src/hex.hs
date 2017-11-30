@@ -1,5 +1,5 @@
 module Hex
-    ( Hex
+    ( Hex (Axial)
     , center
     , adjacent
     , isAdjacent
