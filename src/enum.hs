@@ -93,6 +93,7 @@ data Config = Config
     , playerCount :: Int
     , diceSize :: Int
     } deriving (Show, Eq)
+    }
 
 getColor :: HexTile -> Color
 getColor Castle        = Burgundy
