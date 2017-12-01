@@ -9,7 +9,8 @@ module Enum
     , ShippingTile (..)
     , Slot (..)
     , Player (..)
-    , Config (..)
+    , TurnOrder (..)
+    , Depot (..)
     , getColor
     , getAction
     ) where
@@ -85,15 +86,16 @@ data Slot = Slot
     { color :: Color
     , dice :: Dice
     } deriving (Show)
-data Player = Player Int
-data Config = Config
-    { storageSize :: Int
-    , goodsStorageSize :: Int
-    , hexRadius :: Int
-    , playerCount :: Int
-    , diceSize :: Int
+data Player = Player
+    { name :: String
+    , id :: Int
     } deriving (Show, Eq)
-    }
+data TurnOrder = TurnOrder Int Int
+    deriving (Show, Eq)
+instance Ord TurnOrder where
+    (<=) (TurnOrder i j) (TurnOrder i' j') = i <= i' && j <= j
+data Depot = BlackDepot | Depot Dice
+    deriving (Show)
 
 getColor :: HexTile -> Color
 getColor Castle        = Burgundy

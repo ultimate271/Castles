@@ -8,30 +8,38 @@ module PlayerBoard
     , incGoods
     , placeHex
     , setLayout
+    , hexes
     ) where
 
 import Enum
 import Hex
+import Data.Maybe (catMaybes)
 
 data PlayerBoard = PlayerBoard
     { actions         :: [DiceAction]
     , storage         :: [HexTile]
-    , goodsStorage    :: [ShippingTile]
+    , dock            :: [ShippingTile]
+    , shipped         :: [ShippingTile]
     , layout          :: Hex -> Maybe Slot
-    , board           :: Hex -> Maybe HexTile
+    , lattice         :: Hex -> Maybe HexTile
     , silverlingCount :: Int
     , workerCount     :: Int
     , victoryTrack    :: Int
     }
+
+hexes :: [Hex] -> PlayerBoard -> [HexTile]
+hexes rng (PlayerBoard{storage = ss, lattice = l}) =
+    ss ++ (catMaybes $ map l rng)
 
 --UNSAFE ACTIONS
 new :: PlayerBoard
 new = PlayerBoard
     { actions         = []
     , storage         = []
-    , goodsStorage    = []
+    , dock            = []
+    , shipped         = []
     , layout          = \h -> Nothing
-    , board           = \h -> Nothing
+    , lattice         = \h -> Nothing
     , silverlingCount = 0
     , workerCount     = 0
     , victoryTrack    = 0
@@ -54,12 +62,16 @@ incStorage p@PlayerBoard{storage = hs} h =
     p {storage = h:hs}
 
 incGoods :: PlayerBoard -> ShippingTile -> PlayerBoard
-incGoods p@PlayerBoard{goodsStorage = ss} s =
-    p {goodsStorage = s:ss}
+incGoods p@PlayerBoard{dock = ss} s =
+    p {dock = s:ss}
+
+incGoodsShipped :: PlayerBoard -> ShippingTile -> PlayerBoard
+incGoodsShipped p@PlayerBoard{shipped = ss} s =
+    p {shipped = s:ss}
 
 placeHex :: PlayerBoard -> HexTile -> Hex -> PlayerBoard
-placeHex p@PlayerBoard{board = b} ht h =
-    p {board = \i -> if h == i then Just ht else b h}
+placeHex p@PlayerBoard{lattice = b} ht h =
+    p {lattice = \i -> if h == i then Just ht else b i}
 
 setLayout :: PlayerBoard -> [(Hex,Slot)] -> PlayerBoard
 setLayout p ss =
