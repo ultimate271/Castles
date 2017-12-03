@@ -2,8 +2,6 @@ module Action
 
 import Enum
 import Hex
-import ServerAction
-import PlayerAction
 
 data PlayerAction
     = Draw Player Dice HexTile
