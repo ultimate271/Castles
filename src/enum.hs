@@ -95,7 +95,7 @@ data TurnOrder = TurnOrder Int Int
 instance Ord TurnOrder where
     (<=) (TurnOrder i j) (TurnOrder i' j') = i <= i' && j <= j
 data Depot = BlackDepot | Depot Dice
-    deriving (Show)
+    deriving (Show, Eq)
 
 getColor :: HexTile -> Color
 getColor Castle        = Burgundy

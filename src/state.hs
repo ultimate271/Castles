@@ -22,12 +22,12 @@ data State = State
     , config        :: CFG.Config
     }
 
-new :: State
-new = State
+blank :: State
+blank = State
     { mainBoard     = MB.new
     , playerBoards  = \_ -> PB.new
     , bank          = \d -> []
-    , discard       = [HexTile]
+    , discard       = []
     , shipmentTrack = []
     , players       = []
     , config        = CFG.new
@@ -38,10 +38,29 @@ test = State
     { mainBoard     = MB.MainBoard { MB.market = \_ -> [Castle] }
     , playerBoards  = \_ -> PB.incStorage PB.new Mine
     , bank          = \_ -> [Port]
+    , discard       = []
     , shipmentTrack = []
     , players       = [Player "Brett" 1, Player "Kyle" 2]
     , config        = CFG.new
     }
+
+new :: CFG.Config -> State
+new cfg = blank {config = cfg}
+
+-- |Distributes a hexlist to a depot -> hexlist function
+type Distribute = [HexTile] -> (Depot -> [HexTile])
+-- |Disperses a [ShippingTile] -> [ShippingTile]
+type Disperse   = [ShippingTile] -> [ShippingTile]
+-- |Returns a state where the bank and shipment track have been added according
+-- to Distribute and Disperse
+fillBank
+    :: State
+    -> (Distribute, Disperse)
+    -> ([HexTile], [ShippingTile])
+    -> State
+fillBank s (hl, sl) (hs, ss) = s { bank = hl hs , shipmentTrack = sl ss }
+
+
 
 -- |Returns a list of all depots
 depots :: State -> [Depot]
