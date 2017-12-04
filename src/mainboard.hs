@@ -8,6 +8,8 @@ module MainBoard
     ) where
 
 import Enum
+import qualified Log
+import qualified Helper as H
 
 data MainBoard = MainBoard
     { market :: Depot -> [HexTile]
@@ -35,6 +37,12 @@ addToMarket m d hs = m
 addToWarehouse :: MainBoard -> Depot -> ShippingTile -> MainBoard
 addToWarehouse m d s = m
     {warehouse = \d' -> if d == d' then s:(warehouse m d) else warehouse m d'}
+
+removeFromMarket :: MainBoard -> Depot -> HexTile -> MainBoard
+removeFromMarket m d h = m
+    { market = \d' -> if d == d' then hs else market m d' }
+    where
+        hs = H.removeElement (h ==) $ market m d
 
 --TODO make this not the identity function
 advanceTurnOrder :: MainBoard -> Player -> MainBoard

@@ -47,16 +47,16 @@ test = State
 new :: CFG.Config -> State
 new cfg = blank {config = cfg}
 
-type Distribute = [HexTile] -> (Depot -> [HexTile])
+type Distribute = State -> [HexTile] -> (Depot -> [HexTile])
 -- ^Distributes a hexlist to a depot -> hexlist function
 
-type Disperse   = [ShippingTile] -> [ShippingTile]
+type Disperse   = State -> [ShippingTile] -> [ShippingTile]
 -- ^Disperses a [ShippingTile] -> [ShippingTile]
 
-fillBank :: :: State -> (Distribute, Disperse) -> ([HexTile], [ShippingTile]) -> State
+fillBank :: State -> (Distribute, Disperse) -> ([HexTile], [ShippingTile]) -> State
 -- ^Returns a state where the bank and shipment track have been added according
 -- to Distribute and Disperse
-fillBank s (hl, sl) (hs, ss) = s { bank = hl hs , shipmentTrack = sl ss }
+fillBank s (hl, sl) (hs, ss) = s { bank = hl s hs , shipmentTrack = sl s ss }
 
 depots :: State -> [Depot]
 -- ^Returns a list of all depots

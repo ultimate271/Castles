@@ -5,9 +5,12 @@ import Action
 
 doAction :: State -> Action -> State
 --TODO Make this not the identity function
+
+--Player name and id
+
 doAction s (PlayerAction (Draw p d h))
     = s
-doAction s (PlayerActian (Place p d h t))
+doAction s (PlayerAction (Place p d h t))
     = s
 doAction s (PlayerAction (Ship p h))
     = s
