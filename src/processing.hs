@@ -3,7 +3,7 @@ module Processing where
 import State
 import Action
 
-doAction :: State -> Action -> State
+doAction :: Action -> State -> State
 --TODO Make this not the identity function
 
 --Player name and id
@@ -13,23 +13,23 @@ doAction :: State -> Action -> State
 --h:hex
 --t:hextile
 --g:goodstile
-doAction s (PlayerAction (Draw p d t))
+doAction (PlayerAction (Draw p d t)) s
     = s
-doAction s (PlayerAction (Place p d h t))
+doAction (PlayerAction (Place p d h t)) s
     = s
-doAction s (PlayerAction (Ship g t))
+doAction (PlayerAction (Ship g t)) s
     = s
-doAction s (PlayerAction (Buy p d))
+doAction (PlayerAction (Buy p d)) s
     = s
-doAction s (PlayerAction (Purchase p t))
+doAction (PlayerAction (Purchase p t)) s
     = s
-doAction s (ServerAction (FillBank ts))
+doAction (ServerAction (FillBank ts)) s
     = s
-doAction s (ServerAction (AssignDice ds))
+doAction (ServerAction (AssignDice ds)) s
     = s
-doAction s (ClearRound)
+doAction (ClearRound) s
     = s
-doAction s (LoadRound)
+doAction (LoadRound) s
     = s
-doAction s (DoEndgameScoring)
+doAction (DoEndgameScoring) s
     = s
