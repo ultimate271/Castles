@@ -6,7 +6,7 @@ module Enum
     , HexTile (..)
     , Dice (..)
     , DiceAction (..)
-    , ShippingTile (..)
+    , GoodsTile (..)
     , Slot (..)
     , Player (..)
     , TurnOrder (..)
@@ -73,7 +73,7 @@ data HexTile
     deriving (Show, Eq)
 data Dice = Dice Int
     deriving (Show, Eq)
-data ShippingTile = ShippingTile Dice
+data GoodsTile = GoodsTile Dice
     deriving (Show, Eq)
 data DiceAction
     = Standard Dice

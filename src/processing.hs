@@ -12,11 +12,12 @@ doAction :: State -> Action -> State
 --d:dice
 --h:hex
 --t:hextile
+--g:goodstile
 doAction s (PlayerAction (Draw p d t))
     = s
 doAction s (PlayerAction (Place p d h t))
     = s
-doAction s (PlayerAction (Ship p t))
+doAction s (PlayerAction (Ship g t))
     = s
 doAction s (PlayerAction (Buy p d))
     = s

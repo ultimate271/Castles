@@ -26,17 +26,22 @@ data State = State
     , playerBoards  :: Player -> PB.PlayerBoard
     , bank          :: Depot -> [HexTile]
     , discard       :: [HexTile]
-    , shipmentTrack :: [ShippingTile]
+    , shipmentTrack :: [GoodsTile]
     , players       :: [Player]
     , config        :: CFG.Config
     , turnOrder     :: Player -> TurnOrder
     } deriving (Eq, Show)
 
---Build
+type Distribute = State -> [HexTile] -> (Depot -> [HexTile])
+-- ^Distributes a hexlist to a depot -> hexlist function
+
+type Disperse   = State -> [GoodsTile] -> [GoodsTile]
+-- ^Disperses a [GoodsTile] -> [GoodsTile]
+
+--Build (Unsafe)----------------------------------------------------------------
 --------------------------------------------------------------------------------
 --------------------------------------------------------------------------------
 
--- Unsafe
 blank :: State
 blank = State
     { mainBoard     = MB.new
@@ -50,12 +55,14 @@ blank = State
     }
 
 addConfig :: State -> Config -> State
+-- ^Returns a state that is just like s but with config c
 addConfig s c = s{config = c}
 
 addPlayer :: State -> Player -> State
+-- ^Returns a state that is just like s but with p added to players
 addPlayer (s{players = ps}) p = s{players = p:ps}
 
-fillBank :: State -> (Distribute, Disperse) -> ([HexTile], [ShippingTile]) -> State
+fillBank :: State -> (Distribute, Disperse) -> ([HexTile], [GoodsTile]) -> State
 -- ^Returns a state where the bank and shipment track have been added according
 -- to Distribute and Disperse
 fillBank s (hl, sl) (hs, ss) = s { bank = hl s hs , shipmentTrack = sl s ss }
@@ -71,18 +78,15 @@ setTurnOrder :: State -> Player -> TurnOrder -> State
 setTurnOrder (s{turnOrder = to'}) p to =
     s {turnOrder = \p' -> if p == p' then to else to' p'}
 
+--Retrieve----------------------------------------------------------------------
+--------------------------------------------------------------------------------
+--------------------------------------------------------------------------------
+
 playerBoardList :: State -> [PB.PlayerBoard]
+-- ^Returns the list of PlayerBoards
 playerBoardList s = map (playerBoards s) (players s)
 
-type Distribute = State -> [HexTile] -> (Depot -> [HexTile])
--- ^Distributes a hexlist to a depot -> hexlist function
 
-type Disperse   = State -> [ShippingTile] -> [ShippingTile]
--- ^Disperses a [ShippingTile] -> [ShippingTile]
-
---Retrieve
---------------------------------------------------------------------------------
---------------------------------------------------------------------------------
 
 depots :: State -> [Depot]
 -- ^Returns a list of all depots

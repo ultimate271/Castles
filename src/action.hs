@@ -6,7 +6,7 @@ import Hex
 data PlayerAction
     = Draw Player Dice HexTile
     | Place Player Dice Hex HexTile
-    | Ship Player HexTile
+    | Ship Player GoodsTile
     | Buy Player Dice
     | Purchase Player HexTile
     deriving (Eq, Show)

@@ -18,8 +18,8 @@ import Data.Maybe (catMaybes)
 data PlayerBoard = PlayerBoard
     { actions         :: [DiceAction]
     , storage         :: [HexTile]
-    , dock            :: [ShippingTile]
-    , shipped         :: [ShippingTile]
+    , dock            :: [GoodsTile]
+    , shipped         :: [GoodsTile]
     , layout          :: Hex -> Maybe Slot
     , lattice         :: Hex -> Maybe HexTile
     , silverlingCount :: Int
@@ -27,16 +27,15 @@ data PlayerBoard = PlayerBoard
     , victoryTrack    :: Int
     } deriving (Eq, Show)
 
-hexes :: [Hex] -> PlayerBoard -> [HexTile]
-hexes rng (PlayerBoard{storage = ss, lattice = l}) =
-    ss ++ (catMaybes $ map l rng)
+--Build-------------------------------------------------------------------------
+--------------------------------------------------------------------------------
+--------------------------------------------------------------------------------
 
---UNSAFE ACTIONS
 new :: PlayerBoard
 new = PlayerBoard
     { actions         = []
     , storage         = []
-    , dock            = []
+    , goods           = []
     , shipped         = []
     , layout          = \h -> Nothing
     , lattice         = \h -> Nothing
@@ -61,11 +60,11 @@ incStorage :: PlayerBoard -> HexTile -> PlayerBoard
 incStorage p@PlayerBoard{storage = hs} h =
     p {storage = h:hs}
 
-incGoods :: PlayerBoard -> ShippingTile -> PlayerBoard
-incGoods p@PlayerBoard{dock = ss} s =
-    p {dock = s:ss}
+incGoods :: PlayerBoard -> GoodsTile -> PlayerBoard
+incGoods p@PlayerBoard{goods = ss} s =
+    p {goods = s:ss}
 
-incGoodsShipped :: PlayerBoard -> ShippingTile -> PlayerBoard
+incGoodsShipped :: PlayerBoard -> GoodsTile -> PlayerBoard
 incGoodsShipped p@PlayerBoard{shipped = ss} s =
     p {shipped = s:ss}
 
@@ -76,3 +75,12 @@ placeHex p@PlayerBoard{lattice = b} ht h =
 setLayout :: PlayerBoard -> [(Hex,Slot)] -> PlayerBoard
 setLayout p ss =
     p{layout = \h -> lookup h ss}
+
+--Retrieve----------------------------------------------------------------------
+--------------------------------------------------------------------------------
+--------------------------------------------------------------------------------
+
+hexes :: [Hex] -> PlayerBoard -> [HexTile]
+-- ^Returns a list of all HexTiles that exist on this player board
+hexes rng (PlayerBoard{storage = ss, lattice = l}) =
+    ss ++ (catMaybes $ map l rng)
