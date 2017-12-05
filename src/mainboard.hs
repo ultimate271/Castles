@@ -27,22 +27,22 @@ blank = MainBoard
     , warehouse = \d -> []
     }
 
-addToMarket :: MainBoard -> Depot -> HexTile -> MainBoard
-addToMarket m d h = m
+addToMarket :: Depot -> HexTile -> MainBoard -> MainBoard
+addToMarket d h m = m
     { market = \d' -> if d == d' then h : market m d else market m d'
     }
 
-addToWarehouse :: MainBoard -> Depot -> GoodsTile -> MainBoard
-addToWarehouse m d g = m
+addToWarehouse :: Depot -> GoodsTile -> MainBoard -> MainBoard
+addToWarehouse d g m = m
     { warehouse = \d' -> if d == d' then g:warehouse m d else warehouse m d' }
 
-removeFromMarket :: MainBoard -> Depot -> HexTile -> MainBoard
-removeFromMarket m d h = m
+removeFromMarket :: Depot -> HexTile -> MainBoard -> MainBoard
+removeFromMarket d h m = m
     { market = \d' -> if d == d' then hs else market m d' }
     where
         hs = H.removeElement (h ==) $ market m d
 
-removeFromWarehouse :: MainBoard -> Depot -> GoodsTile -> MainBoard
+removeFromWarehouse :: Depot -> GoodsTile -> MainBoard -> MainBoard
 removeFromWarehouse m d g = m
     { warehouse = \d' -> if d == d' then gs else warehouse m d' }
     where

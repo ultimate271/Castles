@@ -109,8 +109,6 @@ playerBoardList :: State -> [PB.PlayerBoard]
 -- ^Returns the list of PlayerBoards
 playerBoardList s = map (playerBoards s) (players s)
 
-
-
 depots :: State -> [Depot]
 -- ^Returns a list of all depots
 depots s = BlackDepot:[Depot $ Dice i | i <- [1..d]]
