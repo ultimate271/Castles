@@ -9,6 +9,7 @@ module PlayerBoard
     , addToGoods
     , removeFromGoods
     , addToShipped
+    , build
     , placeHex
     , setLayout
     , hexes
@@ -88,6 +89,9 @@ placeHex ht h p@PlayerBoard{lattice = b} =
 setLayout :: [(Hex,Slot)] -> PlayerBoard -> PlayerBoard
 setLayout ss p =
     p{layout = \h -> lookup h ss}
+
+build :: [PlayerBoard -> PlayerBoard] -> PlayerBoard
+build = foldr (\f p -> f p) blank
 
 --Retrieve----------------------------------------------------------------------
 --------------------------------------------------------------------------------

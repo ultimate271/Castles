@@ -4,6 +4,7 @@ module MainBoard
     , addToMarket
     , addToWarehouse
     , removeFromMarket
+    , build
     , hexes
     , toString
     ) where
@@ -43,10 +44,13 @@ removeFromMarket d h m = m
         hs = H.removeElement (h ==) $ market m d
 
 removeFromWarehouse :: Depot -> GoodsTile -> MainBoard -> MainBoard
-removeFromWarehouse m d g = m
+removeFromWarehouse d g m = m
     { warehouse = \d' -> if d == d' then gs else warehouse m d' }
     where
         gs = H.removeElement (g ==) $ warehouse m d
+
+build :: [MainBoard -> MainBoard] -> MainBoard
+build = foldr (\f p -> f p) blank
 
 -- Retrieve---------------------------------------------------------------------
 --------------------------------------------------------------------------------

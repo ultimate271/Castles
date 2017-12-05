@@ -44,15 +44,15 @@ instance Show State where
       where show1PlayerBoard p =
                 show p ++ " -> " ++ PB.toString (pbrange s) (playerBoards s p)
             showPlayerBoards =
-                foldr (\p acc -> acc ++ " | " ++ show1PlayerBoard p) "" (players s)
+                foldr (\p acc -> show1PlayerBoard p ++ " | " ++ acc) "" (players s)
             show1Bank d =
                 show d ++ " -> " ++ show (bank s d)
             showBank =
-                foldr (\d acc -> acc ++ " | " ++ show1Bank d) "" (depots s)
+                foldr (\d acc -> show1Bank d ++ " | " ++ acc) "" (depots s)
             show1TurnOrder p =
                 show p ++ " -> " ++ show (turnOrder s p)
             showTurnOrder =
-                foldr (\d acc -> acc ++ " | " ++ show1TurnOrder d) "" (players s)
+                foldr (\d acc -> show1TurnOrder d ++ " | " ++ acc) "" (players s)
 
 
 type Distribute = State -> [HexTile] -> (Depot -> [HexTile])
@@ -100,6 +100,9 @@ addPlayerBoard p pb s@State{playerBoards = pb'} =
 setTurnOrder :: Player -> TurnOrder -> State -> State
 setTurnOrder p to s@State{turnOrder = to'} =
     s {turnOrder = \p' -> if p == p' then to else to' p'}
+
+build :: [State -> State] -> State
+build = foldr (\f s -> f s) blank
 
 --Retrieve----------------------------------------------------------------------
 --------------------------------------------------------------------------------
