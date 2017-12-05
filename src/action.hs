@@ -9,12 +9,15 @@ data PlayerAction
     | Ship Player HexTile
     | Buy Player Dice
     | Purchase Player HexTile
+    deriving (Eq, Show)
 data ServerAction
     = FillBank [HexTile]
     | AssignDice [Dice]
     | ClearRound
     | LoadRound
     | DoEndgameScoring
+    deriving (Eq, Show)
 data Action
     = ServerAction ServerAction
     | PlayerAction PlayerAction
+    deriving (Eq, Show)

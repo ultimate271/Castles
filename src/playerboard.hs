@@ -25,7 +25,7 @@ data PlayerBoard = PlayerBoard
     , silverlingCount :: Int
     , workerCount     :: Int
     , victoryTrack    :: Int
-    }
+    } deriving (Eq, Show)
 
 hexes :: [Hex] -> PlayerBoard -> [HexTile]
 hexes rng (PlayerBoard{storage = ss, lattice = l}) =

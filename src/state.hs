@@ -1,6 +1,15 @@
 module State
     ( State
-    , new
+    --Builders
+    , blank
+    , addConfig
+    , addPlayer
+    , fillBank
+    , addMainBoard
+    , addPlayerBoard
+    , setTurnOrder
+    --Retrievers
+    , playerBoardList
     , depots
     , pbrange
     , hexes
@@ -20,8 +29,14 @@ data State = State
     , shipmentTrack :: [ShippingTile]
     , players       :: [Player]
     , config        :: CFG.Config
-    }
+    , turnOrder     :: Player -> TurnOrder
+    } deriving (Eq, Show)
 
+--Build
+--------------------------------------------------------------------------------
+--------------------------------------------------------------------------------
+
+-- Unsafe
 blank :: State
 blank = State
     { mainBoard     = MB.new
@@ -31,21 +46,33 @@ blank = State
     , shipmentTrack = []
     , players       = []
     , config        = CFG.new
+    , turnOrder     = \_ -> TurnOrder 0 0
     }
 
-test :: State
-test = State
-    { mainBoard     = MB.MainBoard { MB.market = \_ -> [Castle] }
-    , playerBoards  = \_ -> PB.incStorage PB.new Mine
-    , bank          = \_ -> [Port]
-    , discard       = []
-    , shipmentTrack = []
-    , players       = [Player "Brett" 1, Player "Kyle" 2]
-    , config        = CFG.new
-    }
+addConfig :: State -> Config -> State
+addConfig s c = s{config = c}
 
-new :: CFG.Config -> State
-new cfg = blank {config = cfg}
+addPlayer :: State -> Player -> State
+addPlayer (s{players = ps}) p = s{players = p:ps}
+
+fillBank :: State -> (Distribute, Disperse) -> ([HexTile], [ShippingTile]) -> State
+-- ^Returns a state where the bank and shipment track have been added according
+-- to Distribute and Disperse
+fillBank s (hl, sl) (hs, ss) = s { bank = hl s hs , shipmentTrack = sl s ss }
+
+addMainBoard :: State -> MainBoard -> State
+addMainBoard s m = s{mainBoard = m}
+
+addPlayerBoard :: State -> Player -> PlayerBoard -> State
+addPlayerBoard (s{playerBoards = pb'}) p pb =
+    s {playerBoards = \p' -> if p == p' then pb else pb' p'}
+
+setTurnOrder :: State -> Player -> TurnOrder -> State
+setTurnOrder (s{turnOrder = to'}) p to =
+    s {turnOrder = \p' -> if p == p' then to else to' p'}
+
+playerBoardList :: State -> [PB.PlayerBoard]
+playerBoardList s = map (playerBoards s) (players s)
 
 type Distribute = State -> [HexTile] -> (Depot -> [HexTile])
 -- ^Distributes a hexlist to a depot -> hexlist function
@@ -53,10 +80,9 @@ type Distribute = State -> [HexTile] -> (Depot -> [HexTile])
 type Disperse   = State -> [ShippingTile] -> [ShippingTile]
 -- ^Disperses a [ShippingTile] -> [ShippingTile]
 
-fillBank :: State -> (Distribute, Disperse) -> ([HexTile], [ShippingTile]) -> State
--- ^Returns a state where the bank and shipment track have been added according
--- to Distribute and Disperse
-fillBank s (hl, sl) (hs, ss) = s { bank = hl s hs , shipmentTrack = sl s ss }
+--Retrieve
+--------------------------------------------------------------------------------
+--------------------------------------------------------------------------------
 
 depots :: State -> [Depot]
 -- ^Returns a list of all depots
@@ -77,11 +103,5 @@ hexes s = dhs ++ bhs ++ mbhs ++ pbhs -- concat ls
         mbhs = MB.hexes (depots s) (mainBoard s)
         pbhs = pbs >>= PB.hexes (pbrange s)
         pbs = map (playerBoards s) (players s)
-
-
-
---PlayerBoard -> [Depot] -> [HexTile]
-
-
 
 

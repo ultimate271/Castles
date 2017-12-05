@@ -15,10 +15,15 @@ data MainBoard = MainBoard
     { market :: Depot -> [HexTile]
     , warehouse :: Depot -> [ShippingTile]
     , turnOrder :: Player -> TurnOrder
-    }
+    } deriving (Eq, Show)
 
-new :: MainBoard
-new = MainBoard
+
+--------------------------------------------------------------------------------
+--Build
+--------------------------------------------------------------------------------
+
+blank :: MainBoard
+blank = MainBoard
     { market = \d -> []
     , warehouse = \d -> []
     , turnOrder = \p -> TurnOrder 0 0
