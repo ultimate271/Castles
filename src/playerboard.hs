@@ -13,6 +13,7 @@ module PlayerBoard
     , placeHex
     , setLayout
     , hexes
+    , goods
     , toString
     ) where
 
@@ -101,6 +102,10 @@ hexes :: [Hex] -> PlayerBoard -> [HexTile]
 -- ^Returns a list of all HexTiles that exist on this player board
 hexes rng (PlayerBoard{storage = ss, lattice = l}) =
     ss ++ (catMaybes $ map l rng)
+
+goods :: PlayerBoard -> [GoodsTile]
+-- ^Returns a list of all the goods tiles on this player board
+goods pb = goods pb ++ shipped pb
 
 toString :: [Hex] -> PlayerBoard -> String
 toString hs p = "PlayerBoard "

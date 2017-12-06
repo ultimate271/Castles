@@ -93,9 +93,18 @@ data Player = Player
 data TurnOrder = TurnOrder Int Int
     deriving (Show, Eq)
 instance Ord TurnOrder where
-    (<=) (TurnOrder i j) (TurnOrder i' j') = i <= i' && j <= j
+    (<=) (TurnOrder i j) (TurnOrder i' j') = i <= i' || i == i' && j <= j'
 data Depot = BlackDepot | Depot Dice
     deriving (Show, Eq)
+data StateError
+    = StorageFull Player
+    | HexTaken Player Hex
+data GameState
+    = StateError StateError
+    | Building
+    | Awaiting
+    | Processing
+    | Scoring
 
 getColor :: HexTile -> Color
 getColor Castle        = Burgundy

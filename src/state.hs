@@ -9,10 +9,11 @@ module State
     , addPlayerBoard
     , setTurnOrder
     --Retrievers
-    , playerBoardList
+    , pbList
     , depots
     , pbrange
     , hexes
+    , goods
     ) where
 
 import Enum
@@ -30,6 +31,7 @@ data State = State
     , players       :: [Player]
     , config        :: CFG.Config
     , turnOrder     :: Player -> TurnOrder
+    , gameState     :: GameState
     }
 instance Show State where
     show s = " State "
@@ -108,9 +110,9 @@ build = foldr (\f s -> f s) blank
 --------------------------------------------------------------------------------
 --------------------------------------------------------------------------------
 
-playerBoardList :: State -> [PB.PlayerBoard]
+pbList :: State -> [PB.PlayerBoard]
 -- ^Returns the list of PlayerBoards
-playerBoardList s = map (playerBoards s) (players s)
+pbList s = map (playerBoards s) (players s)
 
 depots :: State -> [Depot]
 -- ^Returns a list of all depots
@@ -125,11 +127,21 @@ hexes :: State -> [HexTile]
 -- ^Returns an unordered list of all the hex tiles in the state
 -- The content of this list should remain constant under "safe" operations
 hexes s = dhs ++ bhs ++ mbhs ++ pbhs -- concat ls
-    where
-        dhs = discard s
+  where dhs = discard s
         bhs = depots s >>= bank s
         mbhs = MB.hexes (depots s) (mainBoard s)
         pbhs = pbs >>= PB.hexes (pbrange s)
         pbs = map (playerBoards s) (players s)
 
+goods :: State -> [GoodsTile]
+-- ^Returns an unordered list of all the goods tiles in the state
+-- The content of this list should remain constant under "safe" operations
+goods s = mbgoods ++ pbgoods ++ shipmentTrack s
+  where mbgoods = MB.goods (depots s)
+        pbgoods = pbList s >>= PB.goods
+
+turnOrderList :: State -> [Player]
+-- ^Returns the list of players
+turnOrderList s@State{turnOrder = to, players = ps} =
+    sortBy (\p1 p2 -> compare (to p2) (to p1)) ps
 

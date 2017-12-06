@@ -9,17 +9,17 @@ doAction :: Action -> State -> State
 --Player name and id
 
 --p:player
---d:dice
+--a:diceAction
 --h:hex
 --t:hextile
 --g:goodstile
-doAction (PlayerAction (Draw p d t)) s
+doAction (PlayerAction (Draw p a t)) s
     = s
-doAction (PlayerAction (Place p d h t)) s
+doAction (PlayerAction (Place p a h t)) s
     = s
 doAction (PlayerAction (Ship g t)) s
     = s
-doAction (PlayerAction (Buy p d)) s
+doAction (PlayerAction (Buy p a)) s
     = s
 doAction (PlayerAction (Purchase p t)) s
     = s

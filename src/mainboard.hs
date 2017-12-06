@@ -6,6 +6,7 @@ module MainBoard
     , removeFromMarket
     , build
     , hexes
+    , goods
     , toString
     ) where
 
@@ -58,7 +59,11 @@ build = foldr (\f p -> f p) blank
 
 hexes :: [Depot] -> MainBoard -> [HexTile]
 -- ^Generates a list of all hexes on the given depots of the main board
-hexes d MainBoard{market = m} = d >>= m
+hexes ds MainBoard{market = m} = ds >>= m
+
+goods :: [Depot] -> MainBoard -> [GoodsTile]
+-- ^Generates a list of all goods on the given depots of this main board
+goods ds MainBoard{warehouse = w} = ds >>= w
 
 toString :: [Depot] -> MainBoard -> String
 toString ds m =

@@ -4,10 +4,10 @@ import Enum
 import Hex
 
 data PlayerAction
-    = Draw Player Dice HexTile
-    | Place Player Dice Hex HexTile
+    = Draw Player DiceAction HexTile
+    | Place Player DiceAction Hex HexTile
     | Ship Player GoodsTile
-    | Buy Player Dice
+    | Buy Player DiceAction
     | Purchase Player HexTile
     deriving (Eq, Show)
 data ServerAction
