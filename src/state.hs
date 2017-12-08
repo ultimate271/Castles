@@ -1,5 +1,6 @@
 module State
     ( State
+    , fail
     --Builders
     , blank
     , addConfig
@@ -34,7 +35,7 @@ data State = State
     , gameState     :: GameState
     }
 instance Show State where
-    show s = " State "
+    show s = "State "
         ++ "{ mainBoard = " ++ MB.toString (depots s) (mainBoard s)
         ++ ", playerBoards = " ++ showPlayerBoards
         ++ ", bank = " ++ showBank
@@ -43,6 +44,8 @@ instance Show State where
         ++ ", players = " ++ (show $ players s)
         ++ ", config = " ++ (show $ config s)
         ++ ", turnOrder " ++ showTurnOrder
+        ++ ", gameState " ++ (show $ gameState s)
+        ++ "}"
       where show1PlayerBoard p =
                 show p ++ " -> " ++ PB.toString (pbrange s) (playerBoards s p)
             showPlayerBoards =
@@ -105,6 +108,9 @@ setTurnOrder p to s@State{turnOrder = to'} =
 
 build :: [State -> State] -> State
 build = foldr (\f s -> f s) blank
+
+fail :: StateError -> State -> State
+fail e s = s {gameState = StateError e}
 
 --Retrieve----------------------------------------------------------------------
 --------------------------------------------------------------------------------
