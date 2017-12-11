@@ -5,15 +5,19 @@ module Enum.Config
     , hexRadius
     , playerCount
     , diceSize
+    , phaseCount
+    , turnsPerPhase
     , new
     ) where
 
 data Config = Config
-    { storageSize :: Int
-    , dockSize :: Int
-    , hexRadius :: Int
-    , playerCount :: Int
-    , diceSize :: Int
+    { storageSize   :: Int
+    , dockSize      :: Int
+    , hexRadius     :: Int
+    , playerCount   :: Int
+    , diceSize      :: Int
+    , phaseCount    :: Int
+    , turnsPerPhase :: Int
     } deriving (Show, Eq)
 
 new :: Config
@@ -23,4 +27,6 @@ new = Config
     , hexRadius = 3
     , playerCount = 4
     , diceSize = 6
+    , phaseCount = 5
+    , turnsPerPhase = 5
     }

@@ -10,8 +10,15 @@ data StateError
     | IllegalAction Player Action
     deriving (Eq, Show)
 
+data Phase
+    = Setup
+    | Phase Int
+    | GameEnd
+    deriving (Eq, Show)
+
 data GameState
-    = StateError StateError
-    | Turn Player
-    | Setup
+    = GameState
+        { playerQueue :: [Player]
+        }
+    | StateError StateError
     deriving (Eq, Show)

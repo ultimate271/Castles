@@ -15,6 +15,8 @@ module Core.State
     , pbrange
     , allHexes
     , allGoods
+    , phaseNumber
+    , turnNumber
     ) where
 
 import Enum.Enum
@@ -27,27 +29,27 @@ import Core.GameState
 import Data.List (sortBy)
 
 data State = State
-    { mainBoard     :: MB.MainBoard
-    , playerBoards  :: Player -> PB.PlayerBoard
-    , bank          :: Depot -> [HexTile]
-    , discard       :: [HexTile]
-    , shipmentTrack :: [GoodsTile]
-    , players       :: [Player]
-    , config        :: CFG.Config
-    , turnOrder     :: Player -> TurnOrder
-    , gameState     :: GameState
+    { mainBoard      :: MB.MainBoard
+    , playerBoards   :: Player -> PB.PlayerBoard
+    , bank           :: Depot -> [HexTile]
+    , discard        :: [HexTile]
+    , shipmentTrack  :: [GoodsTile]
+    , players        :: [Player]
+    , config         :: CFG.Config
+    , turnOrderTrack :: Player -> TurnOrder
+    , gameState      :: GameState
     }
 instance Show State where
     show s = "State "
-        ++ "{ mainBoard = " ++ MB.toString (depots s) (mainBoard s)
-        ++ ", playerBoards = " ++ showPlayerBoards
-        ++ ", bank = " ++ showBank
-        ++ ", discard = " ++ (show $ discard s)
-        ++ ", shipmentTrack = " ++ (show $ shipmentTrack s)
-        ++ ", players = " ++ (show $ players s)
-        ++ ", config = " ++ (show $ config s)
-        ++ ", turnOrder " ++ showTurnOrder
-        ++ ", gameState " ++ (show $ gameState s)
+        ++ "{ mainBoard = "      ++ MB.toString (depots s) (mainBoard s)
+        ++ ", playerBoards = "   ++ showPlayerBoards
+        ++ ", bank = "           ++ showBank
+        ++ ", discard = "        ++ (show $ discard s)
+        ++ ", shipmentTrack = "  ++ (show $ shipmentTrack s)
+        ++ ", players = "        ++ (show $ players s)
+        ++ ", config = "         ++ (show $ config s)
+        ++ ", turnOrderTrack = " ++ showTurnOrder
+        ++ ", gameState "        ++ (show $ gameState s)
         ++ "}"
       where show1PlayerBoard p =
                 show p ++ " -> " ++ PB.toString (pbrange s) (playerBoards s p)
@@ -58,7 +60,7 @@ instance Show State where
             showBank =
                 foldr (\d acc -> show1Bank d ++ " | " ++ acc) "" (depots s)
             show1TurnOrder p =
-                show p ++ " -> " ++ show (turnOrder s p)
+                show p ++ " -> " ++ show (turnOrderTrack s p)
             showTurnOrder =
                 foldr (\d acc -> show1TurnOrder d ++ " | " ++ acc) "" (players s)
 
@@ -75,15 +77,15 @@ type Disperse   = State -> [GoodsTile] -> [GoodsTile]
 
 blank :: State
 blank = State
-    { mainBoard     = MB.blank
-    , playerBoards  = \_ -> PB.blank
-    , bank          = \d -> []
-    , discard       = []
-    , shipmentTrack = []
-    , players       = []
-    , config        = CFG.new
-    , turnOrder     = \_ -> TurnOrder 0 0
-    , gameState     = Setup
+    { mainBoard      = MB.blank
+    , playerBoards   = \_ -> PB.blank
+    , bank           = \d -> []
+    , discard        = []
+    , shipmentTrack  = []
+    , players        = []
+    , config         = CFG.new
+    , turnOrderTrack = \_ -> TurnOrder 0 0
+    , gameState      = GameState{playerQueue = []}
     }
 
 addConfig :: CFG.Config -> State-> State
@@ -107,8 +109,8 @@ addPlayerBoard p pb s@State{playerBoards = pb'} =
     s {playerBoards = \p' -> if p == p' then pb else pb' p'}
 
 setTurnOrder :: Player -> TurnOrder -> State -> State
-setTurnOrder p to s@State{turnOrder = to'} =
-    s {turnOrder = \p' -> if p == p' then to else to' p'}
+setTurnOrder p to s@State{turnOrderTrack = to'} =
+    s {turnOrderTrack = \p' -> if p == p' then to else to' p'}
 
 build :: State -> [State -> State] -> State
 build = foldr (\f s -> f s)
@@ -152,6 +154,22 @@ allGoods s = mbgoods ++ pbgoods ++ shipmentTrack s
 
 turnOrderList :: State -> [Player]
 -- ^Returns the list of players
-turnOrderList State{turnOrder = to, players = ps} =
+turnOrderList State{turnOrderTrack = to, players = ps} =
     sortBy (\p1 p2 -> compare (to p2) (to p1)) ps
 
+phaseNumber :: State -> Phase
+-- ^Finds the current phase based on the shipping track
+phaseNumber State{shipmentTrack = gs, config = c, gameState = g} =
+    if l == p * t then Setup
+    else if l == 0 && length ps == 0 then GameEnd
+    else Phase $ p - div l t
+  where ps = playerQueue g
+        l = length gs
+        p = CFG.phaseCount c
+        t = CFG.turnsPerPhase c
+
+turnNumber :: State -> Int
+-- ^Finds which turn it is in the phase based on the shipping track
+turnNumber State{shipmentTrack = gs, config = c} =
+    t - 1 - length gs `mod` t
+  where t = CFG.turnsPerPhase c
