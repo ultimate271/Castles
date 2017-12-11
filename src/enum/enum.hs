@@ -1,4 +1,4 @@
-module Enum
+module Enum.Enum
     ( Animal (..)
     , Building (..)
     , Knowledge (..)
@@ -12,13 +12,11 @@ module Enum
     , TurnOrder (..)
     , Depot (..)
     --State Error passthrough import
-    , StateError (..)
     , getColor
     , getAction
     ) where
 
-import StateError
-import Knowledge
+import Enum.Knowledge
 
 data Player = Player
     { name :: String
@@ -54,17 +52,14 @@ data DiceAction
     | Pull [Color]
     | Push
     | Ship
-    deriving (Show)
+    | DrawGoods
+    deriving (Eq, Show)
 data Slot = Slot
     { color :: Color
     , dice :: Dice
     } deriving (Show)
 data Depot = BlackDepot | Depot Dice
     deriving (Show, Eq)
-data GameState
-    = StateError StateError
-    | Turn Player
-    | Setup
 
 getColor :: HexTile -> Color
 getColor Castle        = Burgundy

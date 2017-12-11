@@ -1,17 +1,17 @@
-module MainBoard
+module Core.MainBoard
     ( MainBoard
     , blank
     , addToMarket
     , addToWarehouse
     , removeFromMarket
     , build
-    , hexes
-    , goods
+    , allHexes
+    , allGoods
     , toString
     ) where
 
-import Enum
-import qualified Log
+import Enum.Enum
+import qualified Log as Log
 import qualified Helper as H
 
 data MainBoard = MainBoard
@@ -57,13 +57,13 @@ build = foldr (\f p -> f p) blank
 --------------------------------------------------------------------------------
 --------------------------------------------------------------------------------
 
-hexes :: [Depot] -> MainBoard -> [HexTile]
+allHexes :: [Depot] -> MainBoard -> [HexTile]
 -- ^Generates a list of all hexes on the given depots of the main board
-hexes ds MainBoard{market = m} = ds >>= m
+allHexes ds MainBoard{market = m} = ds >>= m
 
-goods :: [Depot] -> MainBoard -> [GoodsTile]
+allGoods :: [Depot] -> MainBoard -> [GoodsTile]
 -- ^Generates a list of all goods on the given depots of this main board
-goods ds MainBoard{warehouse = w} = ds >>= w
+allGoods ds MainBoard{warehouse = w} = ds >>= w
 
 toString :: [Depot] -> MainBoard -> String
 toString ds m =

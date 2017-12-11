@@ -1,6 +1,6 @@
-module State
+module Core.State
     ( State
-    , fail
+    , kill
     --Builders
     , blank
     , addConfig
@@ -13,15 +13,18 @@ module State
     , pbList
     , depots
     , pbrange
-    , hexes
-    , goods
+    , allHexes
+    , allGoods
     ) where
 
-import Enum
-import qualified Config as CFG
-import qualified MainBoard as MB
-import qualified PlayerBoard as PB
-import qualified Hex (Hex, range, center)
+import Enum.Enum
+import qualified Enum.Config as CFG
+import qualified Enum.Hex as Hex (Hex, range, center)
+import qualified Core.MainBoard as MB
+import qualified Core.PlayerBoard as PB
+import Core.GameState
+
+import Data.List (sortBy)
 
 data State = State
     { mainBoard     :: MB.MainBoard
@@ -80,6 +83,7 @@ blank = State
     , players       = []
     , config        = CFG.new
     , turnOrder     = \_ -> TurnOrder 0 0
+    , gameState     = Setup
     }
 
 addConfig :: CFG.Config -> State-> State
@@ -106,11 +110,11 @@ setTurnOrder :: Player -> TurnOrder -> State -> State
 setTurnOrder p to s@State{turnOrder = to'} =
     s {turnOrder = \p' -> if p == p' then to else to' p'}
 
-build :: [State -> State] -> State
-build = foldr (\f s -> f s) blank
+build :: State -> [State -> State] -> State
+build = foldr (\f s -> f s)
 
-fail :: StateError -> State -> State
-fail e s = s {gameState = StateError e}
+kill :: StateError -> State -> State
+kill e s = s {gameState = StateError e}
 
 --Retrieve----------------------------------------------------------------------
 --------------------------------------------------------------------------------
@@ -129,25 +133,25 @@ pbrange :: State -> [Hex.Hex]
 -- ^Returns the domain of the player board
 pbrange s = Hex.range Hex.center (CFG.hexRadius $ config s)
 
-hexes :: State -> [HexTile]
+allHexes :: State -> [HexTile]
 -- ^Returns an unordered list of all the hex tiles in the state
 -- The content of this list should remain constant under "safe" operations
-hexes s = dhs ++ bhs ++ mbhs ++ pbhs -- concat ls
+allHexes s = dhs ++ bhs ++ mbhs ++ pbhs -- concat ls
   where dhs = discard s
         bhs = depots s >>= bank s
-        mbhs = MB.hexes (depots s) (mainBoard s)
-        pbhs = pbs >>= PB.hexes (pbrange s)
+        mbhs = MB.allHexes (depots s) (mainBoard s)
+        pbhs = pbs >>= PB.allHexes (pbrange s)
         pbs = map (playerBoards s) (players s)
 
-goods :: State -> [GoodsTile]
+allGoods :: State -> [GoodsTile]
 -- ^Returns an unordered list of all the goods tiles in the state
 -- The content of this list should remain constant under "safe" operations
-goods s = mbgoods ++ pbgoods ++ shipmentTrack s
-  where mbgoods = MB.goods (depots s)
-        pbgoods = pbList s >>= PB.goods
+allGoods s = mbgoods ++ pbgoods ++ shipmentTrack s
+  where mbgoods = MB.allGoods (depots s) (mainBoard s)
+        pbgoods = pbList s >>= PB.allGoods
 
 turnOrderList :: State -> [Player]
 -- ^Returns the list of players
-turnOrderList s@State{turnOrder = to, players = ps} =
+turnOrderList State{turnOrder = to, players = ps} =
     sortBy (\p1 p2 -> compare (to p2) (to p1)) ps
 

@@ -1,4 +1,4 @@
-module Config
+module Enum.Config
     ( Config
     , storageSize
     , dockSize

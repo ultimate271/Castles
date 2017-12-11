@@ -1,4 +1,4 @@
-module Hex
+module Enum.Hex
     ( Hex (Axial)
     , center
     , adjacent

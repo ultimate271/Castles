@@ -1,4 +1,4 @@
-module PlayerBoard
+module Core.PlayerBoard
     ( PlayerBoard
     , blank
     , incSilverling
@@ -12,13 +12,13 @@ module PlayerBoard
     , build
     , placeHex
     , setLayout
-    , hexes
-    , goods
+    , allHexes
+    , allGoods
     , toString
     ) where
 
-import Enum
-import Hex
+import Enum.Enum
+import Enum.Hex
 import Data.Maybe (catMaybes)
 import Helper as H
 
@@ -98,14 +98,14 @@ build = foldr (\f p -> f p) blank
 --------------------------------------------------------------------------------
 --------------------------------------------------------------------------------
 
-hexes :: [Hex] -> PlayerBoard -> [HexTile]
+allHexes :: [Hex] -> PlayerBoard -> [HexTile]
 -- ^Returns a list of all HexTiles that exist on this player board
-hexes rng (PlayerBoard{storage = ss, lattice = l}) =
+allHexes rng (PlayerBoard{storage = ss, lattice = l}) =
     ss ++ (catMaybes $ map l rng)
 
-goods :: PlayerBoard -> [GoodsTile]
+allGoods :: PlayerBoard -> [GoodsTile]
 -- ^Returns a list of all the goods tiles on this player board
-goods pb = goods pb ++ shipped pb
+allGoods pb = goods pb ++ shipped pb
 
 toString :: [Hex] -> PlayerBoard -> String
 toString hs p = "PlayerBoard "
