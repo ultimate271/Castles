@@ -1,5 +1,6 @@
 module Enum.Hex
     ( Hex (Axial)
+    , toAxial
     , center
     , adjacent
     , isAdjacent
@@ -8,7 +9,6 @@ module Enum.Hex
 
 data Hex = Cube Int Int Int | Axial Int Int
     deriving (Show)
-
 instance Eq Hex where
     (==) (Cube i j k) (Cube i' j' k') = i==i' && j==j' && k==k'
     (==) h i = (toCube h) == (toCube i)
@@ -37,7 +37,7 @@ adjacent (Cube i j k) =
     , Cube (i-1) (j+1) (k+0)
     , Cube (i-1) (j+0) (k+1)
     ]
-adjacent h@(Axial _ _) = map toAxial $ adjacent (toCube h)
+adjacent h@(Axial _ _) = map toAxial $ adjacent $ toCube h
 
 isAdjacent :: Hex -> Hex -> Bool
 isAdjacent h i = elem h (adjacent i)

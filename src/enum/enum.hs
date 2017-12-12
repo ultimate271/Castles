@@ -1,17 +1,17 @@
 module Enum.Enum
-    ( Animal (..)
-    , Building (..)
-    , Knowledge (..)
-    , Color (..)
+    ( Color (..)
     , HexTile (..)
     , Dice (..)
     , DiceAction (..)
     , GoodsTile (..)
-    , Slot (..)
     , Player (..)
     , TurnOrder (..)
     , Depot (..)
-    --State Error passthrough import
+    --Imported from enum.knowledge
+    , Animal (..)
+    , Building (..)
+    , Knowledge (..)
+    , BonusTile (..)
     , getColor
     , getAction
     ) where
@@ -29,7 +29,7 @@ instance Ord TurnOrder where
 data HexTile
     = Castle              -- Burgundy
     | Mine                -- Silver
-    | Port                -- Blue
+    | Boat                -- Blue
     | Pasture Animal Int  -- Green
     | Building Building   -- Brown
     | Knowledge Knowledge -- Yellow
@@ -44,8 +44,9 @@ data Color
     deriving (Show, Eq)
 data GoodsTile = GoodsTile Dice
     deriving (Show, Eq)
-data Dice = Dice Int
-    deriving (Show, Eq)
+newtype Dice = Dice Int deriving (Show, Eq)
+data BonusType = BigBonus | SmallBonus deriving (Eq, Show)
+data BonusTile = BonusTile Color BonusType deriving (Eq, Show)
 data DiceAction
     = Standard Dice
     | Free
@@ -54,17 +55,13 @@ data DiceAction
     | Ship
     | DrawGoods
     deriving (Eq, Show)
-data Slot = Slot
-    { color :: Color
-    , dice :: Dice
-    } deriving (Show)
 data Depot = BlackDepot | Depot Dice
     deriving (Show, Eq)
 
 getColor :: HexTile -> Color
 getColor Castle        = Burgundy
 getColor Mine          = Silver
-getColor Port          = Blue
+getColor Boat          = Blue
 getColor (Pasture _ _) = Green
 getColor (Building _)  = Brown
 getColor (Knowledge _) = Yellow

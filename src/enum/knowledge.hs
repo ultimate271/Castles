@@ -28,14 +28,14 @@ data Knowledge
     | DiceSilverling  -- Recieve +1 silverling for selling you dice
     | DiceWorkers     -- Recieve +2 Total 4 workers when selling dice
     | VarietyGoods    -- At the end, score +3 for each type of good shipped
-    | ErectWarehouse  -- Sell Goods
-    | ErectCarpenter  -- Take Building
-    | ErectChurch     -- Take Mine/Knowledge/Castle
-    | ErectMarket     -- Take Port/Pasture
-    | ErectBoarding   -- 4 Workers
-    | ErectBank       -- 2 Silverlings
-    | ErectCityHall   -- Build
-    | ErectWatchtower -- 4 Victory Points
+    | ErectWarehouse  -- +4 VP at the end of the game for each Warehouse
+    | ErectCarpenter  -- +4 VP at the end of the game for each Carpenter
+    | ErectChurch     -- +4 VP at the end of the game for each Church
+    | ErectMarket     -- +4 VP at the end of the game for each Market
+    | ErectBoarding   -- +4 VP at the end of the game for each Boarding
+    | ErectBank       -- +4 VP at the end of the game for each Bank
+    | ErectCityHall   -- +4 VP at the end of the game for each CityHall
+    | ErectWatchtower -- +4 VP at the end of the game for each Watchtower
     | VarietyAnimals  -- Recieve +4 VP for each variety of animal
     | QuantityGoods   -- Recieve +1 VP for each good shipped
     | BonusKnowledge  -- Recieve +2 VP for each bonus tile in hand

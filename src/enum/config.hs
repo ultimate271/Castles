@@ -1,14 +1,10 @@
 module Enum.Config
-    ( Config
-    , storageSize
-    , dockSize
-    , hexRadius
-    , playerCount
-    , diceSize
-    , phaseCount
-    , turnsPerPhase
-    , new
+    ( Config (..)
+    , depots
+    , blank
     ) where
+
+import Enum.Enum
 
 data Config = Config
     { storageSize   :: Int
@@ -20,13 +16,16 @@ data Config = Config
     , turnsPerPhase :: Int
     } deriving (Show, Eq)
 
-new :: Config
-new = Config
-    { storageSize = 3
-    , dockSize = 3
-    , hexRadius = 3
-    , playerCount = 4
-    , diceSize = 6
-    , phaseCount = 5
-    , turnsPerPhase = 5
+blank :: Config
+blank = Config
+    { storageSize = 0
+    , dockSize = 0
+    , hexRadius = 0
+    , playerCount = 0
+    , diceSize = 0
+    , phaseCount = 0
+    , turnsPerPhase = 0
     }
+
+depots :: Config -> [Depot]
+depots Config{diceSize = d} = BlackDepot:[Depot $ Dice i | i <- [1..d]]

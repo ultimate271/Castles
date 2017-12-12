@@ -1,9 +1,12 @@
 module Core.MainBoard
     ( MainBoard
+    , Slot (..)
     , blank
     , addToMarket
     , addToWarehouse
+    , addToLayout
     , removeFromMarket
+    , removeFromWarehouse
     , build
     , allHexes
     , allGoods
@@ -11,13 +14,29 @@ module Core.MainBoard
     ) where
 
 import Enum.Enum
-import qualified Log as Log
-import qualified Helper as H
+
+import Data.List (delete)
+
+data Slot = Slot
+    { color :: Maybe Color
+    , depot :: Depot
+    } deriving (Eq, Show)
 
 data MainBoard = MainBoard
-    { market :: Depot -> [HexTile]
-    , warehouse :: Depot -> [GoodsTile]
+    { market :: Depot -> [HexTile]      -- Refers to the hextiles
+    , warehouse :: Depot -> [GoodsTile] -- Refers to the goods placed at the start of each turn
+    , layout :: [Slot]                  -- Layout of the mainboard
     }
+toString :: [Depot] -> MainBoard -> String
+toString ds m = "MainBoard"
+    ++ "{ market = " ++ marketStr
+    ++ ", warehouse = " ++ warehouseStr
+    ++ ", layout = " ++ (show $ layout m)
+    ++ "}"
+  where showM d = show d ++ " -> " ++ (show $ market m d)
+        showW d = show d ++ " -> " ++ (show $ warehouse m d)
+        marketStr = foldr (\d acc -> showM d ++ " | " ++ acc) "" ds
+        warehouseStr = foldr (\d acc -> showW d ++ " | " ++ acc) "" ds
 
 --Build (Unsafe) ---------------------------------------------------------------
 --------------------------------------------------------------------------------
@@ -27,6 +46,7 @@ blank :: MainBoard
 blank = MainBoard
     { market = \d -> []
     , warehouse = \d -> []
+    , layout = []
     }
 
 addToMarket :: Depot -> HexTile -> MainBoard -> MainBoard
@@ -38,20 +58,19 @@ addToWarehouse :: Depot -> GoodsTile -> MainBoard -> MainBoard
 addToWarehouse d g m = m
     { warehouse = \d' -> if d == d' then g:warehouse m d else warehouse m d' }
 
+addToLayout :: Slot -> MainBoard -> MainBoard
+addToLayout s m@MainBoard{layout = ss} = m{layout = s:ss}
+
 removeFromMarket :: Depot -> HexTile -> MainBoard -> MainBoard
-removeFromMarket d h m = m
-    { market = \d' -> if d == d' then hs else market m d' }
-    where
-        hs = H.removeElement (h ==) $ market m d
+removeFromMarket d h m@MainBoard{market = k} = m
+    { market = \d' -> if d' == d then delete h $ k d else k d' }
 
 removeFromWarehouse :: Depot -> GoodsTile -> MainBoard -> MainBoard
-removeFromWarehouse d g m = m
-    { warehouse = \d' -> if d == d' then gs else warehouse m d' }
-    where
-        gs = H.removeElement (g ==) $ warehouse m d
+removeFromWarehouse d g m@MainBoard{warehouse = w} = m
+    { warehouse = \d' -> if d' == d then delete g $ w d else w d' }
 
-build :: [MainBoard -> MainBoard] -> MainBoard
-build = foldr (\f p -> f p) blank
+build :: MainBoard -> [MainBoard -> MainBoard] -> MainBoard
+build = foldr (\f m -> f m)
 
 -- Retrieve---------------------------------------------------------------------
 --------------------------------------------------------------------------------
@@ -65,13 +84,6 @@ allGoods :: [Depot] -> MainBoard -> [GoodsTile]
 -- ^Generates a list of all goods on the given depots of this main board
 allGoods ds MainBoard{warehouse = w} = ds >>= w
 
-toString :: [Depot] -> MainBoard -> String
-toString ds m =
-    "MainBoard { market = (" ++ marketStr ++ "), warehouse = (" ++ warehouseStr ++ ") }"
-  where showM d = show d ++ " -> " ++ (show $ market m d)
-        showW d = show d ++ " -> " ++ (show $ warehouse m d)
-        marketStr = foldr (\d acc -> showM d ++ " " ++ acc) "" ds
-        warehouseStr = foldr (\d acc -> showW d ++ " " ++ acc) "" ds
 
 
 
