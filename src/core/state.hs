@@ -8,6 +8,8 @@ module Core.State
     , addToBank
     , addMainBoard
     , addPlayerBoard
+    , addBonusTile
+    , removeBonusTile
     , setTurnOrder
     --Retrievers
     , pbList
@@ -25,12 +27,13 @@ module Core.State
 
 import Enum.Enum
 import qualified Enum.Config as CFG
-import qualified Enum.Hex as Hex (Hex, range, center)
+import Enum.Hex (Hex)
+import qualified Enum.Hex as Hex (range, center)
 import qualified Core.MainBoard as MB
 import qualified Core.PlayerBoard as PB
 import Core.GameState
 
-import Data.List (sortBy)
+import Data.List (sortBy, delete)
 
 data State = State
     { mainBoard      :: MB.MainBoard
@@ -112,11 +115,17 @@ addMainBoard m s = s{mainBoard = m}
 
 addPlayerBoard :: Player -> PB.PlayerBoard -> State -> State
 addPlayerBoard p pb s@State{playerBoards = pb'} =
-    s {playerBoards = \p' -> if p == p' then pb else pb' p'}
+    s {playerBoards = \p' -> if p' == p then pb else pb' p'}
 
 setTurnOrder :: Player -> TurnOrder -> State -> State
 setTurnOrder p to s@State{turnOrderTrack = to'} =
-    s {turnOrderTrack = \p' -> if p == p' then to else to' p'}
+    s {turnOrderTrack = \p' -> if p' == p then to else to' p'}
+
+addBonusTile :: BonusTile -> State -> State
+addBonusTile b s@State{bonusTiles = bs} = s { bonusTiles = b:bs }
+
+removeBonusTile :: BonusTile -> State -> State
+removeBonusTile b s@State{bonusTiles = bs} = s { bonusTiles = delete b bs }
 
 build :: State -> [State -> State] -> State
 build = foldr (\f s -> f s)
@@ -136,7 +145,7 @@ depots :: State -> [Depot]
 -- ^Returns a list of all depots
 depots State{config = c} = CFG.depots c
 
-pbrange :: State -> [Hex.Hex]
+pbrange :: State -> [Hex]
 -- ^Returns the domain of the player board
 pbrange s = Hex.range Hex.center (CFG.hexRadius $ config s)
 

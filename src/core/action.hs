@@ -17,7 +17,7 @@ data PlayerAction
     | DrawGoods Player Depot [GoodsTile]
     deriving (Eq, Show)
 data ServerAction
-    = Setup
+    = DoSetup
         { bank :: [HexTile]
         , track :: [GoodsTile]
         , players :: [Player] --Order matters here

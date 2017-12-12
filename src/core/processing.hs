@@ -44,7 +44,7 @@ doAction (PlayerAction (Discard p t)) s
 doAction (PlayerAction (DrawGoods p d gs)) s
 -- ^p draws gs from mainboard depot d after building a boat
     = s
-doAction (ServerAction a@Setup{}) s
+doAction (ServerAction a@DoSetup{}) s
 -- ^Setup the game according to the specified setup
     = s
 doAction (ServerAction a@LoadTurn{}) s

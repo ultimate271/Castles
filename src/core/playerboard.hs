@@ -1,6 +1,7 @@
 module Core.PlayerBoard
     ( PlayerBoard
     , Slot (..)
+    --Builders
     , blank
     , incSilverling
     , incWorker
@@ -15,15 +16,16 @@ module Core.PlayerBoard
     , placeHex
     , addToLayout
     , setLayout
+    --Retrievers
     , allHexes
     , allGoods
     , toString
     ) where
 
 import Enum.Enum
-import Enum.Hex
+import Enum.Hex (Hex)
 import Data.Maybe (catMaybes)
-import Helper as H
+import Data.List (delete)
 
 data Slot = Slot
     { color :: Color
@@ -95,7 +97,7 @@ addToStorage h p@PlayerBoard{storage = hs} =
 
 removeFromStorage :: HexTile -> PlayerBoard -> PlayerBoard
 removeFromStorage h p@PlayerBoard{storage = hs} =
-    p {storage = H.removeElement (h ==) hs}
+    p {storage = delete h hs}
 
 addToDock :: GoodsTile -> PlayerBoard -> PlayerBoard
 addToDock g p@PlayerBoard{dock = gs} =
@@ -103,7 +105,7 @@ addToDock g p@PlayerBoard{dock = gs} =
 
 removeFromDock :: GoodsTile -> PlayerBoard -> PlayerBoard
 removeFromDock g p@PlayerBoard{dock = gs} =
-    p {dock = H.removeElement (g ==) gs}
+    p {dock = delete g gs}
 
 addToShipped :: GoodsTile -> PlayerBoard -> PlayerBoard
 addToShipped s p@PlayerBoard{shipped = ss} =

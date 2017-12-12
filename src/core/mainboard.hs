@@ -63,11 +63,11 @@ addToLayout s m@MainBoard{layout = ss} = m{layout = s:ss}
 
 removeFromMarket :: Depot -> HexTile -> MainBoard -> MainBoard
 removeFromMarket d h m@MainBoard{market = k} = m
-    { market = \d' -> if d' == d then delete h $ k d else k d' }
+    { market = \d' -> if d' == d then delete h $ k d' else k d' }
 
 removeFromWarehouse :: Depot -> GoodsTile -> MainBoard -> MainBoard
 removeFromWarehouse d g m@MainBoard{warehouse = w} = m
-    { warehouse = \d' -> if d' == d then delete g $ w d else w d' }
+    { warehouse = \d' -> if d' == d then delete g $ w d' else w d' }
 
 build :: MainBoard -> [MainBoard -> MainBoard] -> MainBoard
 build = foldr (\f m -> f m)
