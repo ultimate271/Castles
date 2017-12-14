@@ -1,7 +1,7 @@
 module Enum.Knowledge where
 
 data Animal = Cow | Pig | Chicken | Sheep
-    deriving (Show, Eq)
+    deriving (Show, Eq, Enum, Bounded)
 data Building
     = Warehouse  -- Sell goods
     | Watchtower -- 4 Victory Points
@@ -11,7 +11,7 @@ data Building
     | Boarding   -- Gain 4 Workers
     | Bank       -- Gain 2 Silverling
     | CityHall   -- Build a tile
-    deriving (Show, Eq)
+    deriving (Show, Eq, Enum, Bounded)
 data Knowledge
     = Unrestrict      -- Play more than one building
     | MineWorker      -- Get a worker from each mine at the end phase
@@ -39,4 +39,4 @@ data Knowledge
     | VarietyAnimals  -- Recieve +4 VP for each variety of animal
     | QuantityGoods   -- Recieve +1 VP for each good shipped
     | BonusKnowledge  -- Recieve +2 VP for each bonus tile in hand
-    deriving (Show, Eq)
+    deriving (Show, Eq, Enum, Bounded)
