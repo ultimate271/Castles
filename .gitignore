@@ -3,3 +3,4 @@
 *.o
 commitmsg
 .projections.json
+.stack-work
