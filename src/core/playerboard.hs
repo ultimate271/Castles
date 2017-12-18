@@ -20,6 +20,17 @@ module Core.PlayerBoard
     , allHexes
     , allGoods
     , toString
+    --Rudimentery Retrievers (is there a way to export this better?)
+    , actions
+    , storage
+    , dock
+    , shipped
+    , layout
+    , lattice
+    , silverlingCount
+    , workerCount
+    , victoryTrack
+    , bonusTiles
     ) where
 
 import Enum.Enum
