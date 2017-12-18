@@ -17,8 +17,18 @@ executable castles
   hs-source-dirs:      src
   main-is:             Main.hs
   default-language:    Haskell2010
-  build-depends        : base >= 4.7 && < 5
+  other-modules:       Builtin
+                       , Core.Action
+                       , Core.GameState
+                       , Core.MainBoard
+                       , Core.PlayerBoard
+                       , Core.State
+                       , Display.PlayerBoard
+                       , Enum.Config
+                       , Enum.Enum
+                       , Enum.Hex
+                       , Enum.Knowledge
+  build-depends:       base >= 4.7 && < 5
                        , time
-                       , scotty
                        , regex-posix
                        , regex-compat

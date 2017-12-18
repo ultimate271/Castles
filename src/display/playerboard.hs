@@ -1,13 +1,89 @@
 module Display.PlayerBoard where
 
 import Core.PlayerBoard
+import Builtin
 
 import Enum.Enum
+import Enum.Hex
 import Text.Regex (mkRegex, subRegex)
+import Text.Printf
+import Data.List (group, sort)
 
+h2i :: PlayerBoard -> Hex -> String
+h2i p h = case lattice p h of
+    Just h -> ht2i h
+    Nothing -> case layout p h of
+        Just s -> s2i s
+        Nothing -> "ERR"
 
-display :: a -> String
-display p = raw
+ps2i :: PlayerBoard -> Hex -> String
+ps2i p h = case lattice p h of
+    Just h -> "   "
+    Nothing -> case layout p h of
+        Just s -> s2d s
+        Nothing -> "ERR"
+
+--Hex Tile To Initials
+ht2i :: HexTile -> String
+ht2i Castle = "CAS"
+ht2i Mine = "MIN"
+ht2i Boat = "BOT"
+ht2i (Pasture Cow x) = "PC" ++ show x
+ht2i (Pasture Sheep x) = "PS" ++ show x
+ht2i (Pasture Pig x) = "PP" ++ show x
+ht2i (Pasture Chicken x) = "PH" ++ show x
+ht2i (Building b) = printf "B%02d" $ fromEnum b
+ht2i (Knowledge k) = printf "K%02d" $ fromEnum k
+
+--Slot to Initials
+s2i :: Slot -> String
+s2i Slot{color = Burgundy} = " c "
+s2i Slot{color = Silver} = " m "
+s2i Slot{color = Blue} = " s "
+s2i Slot{color = Green} = " p "
+s2i Slot{color = Brown} = " b "
+s2i Slot{color = Yellow} = " k "
+
+--Slot to dice
+s2d :: Slot -> String
+s2d Slot{dice = Dice i} = " " ++ show i ++ " "
+
+--Maybe Goods to Initials
+g2i :: Maybe GoodsTile -> String
+g2i Nothing = "   "
+g2i (Just (GoodsTile (Dice i))) = " " ++ show i ++ " "
+
+gr2i :: Maybe [GoodsTile] -> String
+gr2i Nothing = "   "
+gr2i (Just gs) = "x" ++ show (length gs) ++ " "
+
+padList :: [a] -> Int -> [Maybe a]
+padList [] i = if i > 0 then Nothing : padList [] (i-1) else []
+padList (x:xs) i = Just x : padList xs (i - 1)
+
+display :: PlayerBoard -> String
+display p = foldr (\(a,b) s -> subRegex (mkRegex a) s b) raw subs where
+    subs = cs ++ ds ++ gs ++ xs ++ hs
+    cs = zip
+        ([printf "c%02d" (n::Int) | n <- [0..36]])
+        (h2i p <$> sortedRange)
+    ds = zip
+        ([printf "d%02d" (n::Int) | n <- [0..36]])
+        (ps2i p <$> sortedRange)
+    gs = zip
+        ([printf "g%02d" (n::Int) | n <- [1..3]])
+        (g2i <$> (padList (head <$> (group . sort $ dock p)) 3))
+    xs = zip
+        ([printf "x%02d" (n::Int) | n <- [1..3]])
+        (gr2i <$> (padList (group . sort $ dock p) 3))
+    goodsList = Dice <$> [1..6] >>= return . GoodsTile
+    hs = zip
+        ([printf "h%02d" (n::Int) | n <- [1..6]])
+        ((\i -> " " ++ show i ++ " ") <$> ((\g -> (length . filter (== g)) (shipped p)) <$> goodsList))
+--          ([1..6] >>= (GoodsTile $ Dice))
+--
+--          ([show $ length . filter (== g) $ shipped p | i <- [1..6], g <- GoodsTile $ Dice i])
+
 
 raw :: String
 raw =

@@ -43,8 +43,8 @@ data Color
     | Yellow     -- Knowledge
     deriving (Show, Eq)
 data GoodsTile = GoodsTile Dice
-    deriving (Show, Eq)
-newtype Dice = Dice Int deriving (Show, Eq)
+    deriving (Show, Eq, Ord)
+newtype Dice = Dice Int deriving (Show, Eq, Ord)
 data BonusType = BigBonus | SmallBonus deriving (Eq, Show)
 data BonusTile = BonusTile Color BonusType deriving (Eq, Show)
 data DiceAction
