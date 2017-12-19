@@ -1,5 +1,10 @@
 module Core.State
     ( State
+    , Player (..)
+    , TurnOrder (..)
+    , StateError (..)
+    , Phase (..)
+    , GameState (..)
     , kill
     --Builders
     , blank
@@ -31,9 +36,33 @@ import Enum.Hex (Hex)
 import qualified Enum.Hex as Hex (range, center)
 import qualified Core.MainBoard as MB
 import qualified Core.PlayerBoard as PB
-import Core.GameState
 
 import Data.List (sortBy, delete)
+
+data Player = Player
+    { name :: String
+    , id :: Int
+    } deriving (Show, Eq)
+data TurnOrder = TurnOrder Int Int
+    deriving (Show, Eq)
+instance Ord TurnOrder where
+    (<=) (TurnOrder i j) (TurnOrder i' j') = i <= i' || i == i' && j <= j'
+data StateError
+    = StorageFull Player
+    | HexTaken Player Hex
+    | IllegalAction Player
+    deriving (Eq, Show)
+data Phase
+    = Setup
+    | Phase Int
+    | GameEnd
+    deriving (Eq, Show)
+data GameState
+    = GameState
+        { playerQueue :: [Player]
+        }
+    | StateError StateError
+    deriving (Eq, Show)
 
 data State = State
     { mainBoard      :: MB.MainBoard
@@ -141,9 +170,10 @@ pbList :: State -> [PB.PlayerBoard]
 -- ^Returns the list of PlayerBoards
 pbList s = (playerBoards s) <$> (players s)
 
-depots :: State -> [Depot]
+depots :: State -> [MB.Depot]
 -- ^Returns a list of all depots
-depots State{config = c} = CFG.depots c
+depots State{config = CFG.Config{CFG.diceSize = d}} =
+    MB.BlackDepot:[MB.Depot $ Dice i | i <- [1..d]]
 
 pbrange :: State -> [Hex]
 -- ^Returns the domain of the player board
@@ -186,3 +216,4 @@ turnNumber :: State -> Int
 turnNumber State{shipmentTrack = gs, config = c} =
     t - 1 - length gs `mod` t
   where t = CFG.turnsPerPhase c
+

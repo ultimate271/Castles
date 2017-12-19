@@ -1,6 +1,7 @@
 module Core.MainBoard
     ( MainBoard
     , Slot (..)
+    , Depot (..)
     , blank
     , addToMarket
     , addToWarehouse
@@ -21,6 +22,8 @@ data Slot = Slot
     { color :: Maybe Color
     , depot :: Depot
     } deriving (Eq, Show)
+data Depot = BlackDepot | Depot Dice
+    deriving (Show, Eq)
 
 data MainBoard = MainBoard
     { market :: Depot -> [HexTile]      -- Refers to the hextiles

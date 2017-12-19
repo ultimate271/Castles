@@ -23,42 +23,42 @@ standardConfig p = CFG.Config
 standardMainBoard :: Int -> MB.MainBoard
 -- ^vanilla main board with n players
 standardMainBoard 2 = MB.build MB.blank
-    [ MB.addToLayout MB.Slot{MB.color = Just Blue     , MB.depot = Depot $ Dice 1}
-    , MB.addToLayout MB.Slot{MB.color = Just Brown    , MB.depot = Depot $ Dice 1}
-    , MB.addToLayout MB.Slot{MB.color = Just Burgundy , MB.depot = Depot $ Dice 2}
-    , MB.addToLayout MB.Slot{MB.color = Just Yellow   , MB.depot = Depot $ Dice 2}
-    , MB.addToLayout MB.Slot{MB.color = Just Green    , MB.depot = Depot $ Dice 3}
-    , MB.addToLayout MB.Slot{MB.color = Just Brown    , MB.depot = Depot $ Dice 3}
-    , MB.addToLayout MB.Slot{MB.color = Just Blue     , MB.depot = Depot $ Dice 4}
-    , MB.addToLayout MB.Slot{MB.color = Just Brown    , MB.depot = Depot $ Dice 4}
-    , MB.addToLayout MB.Slot{MB.color = Just Silver   , MB.depot = Depot $ Dice 5}
-    , MB.addToLayout MB.Slot{MB.color = Just Yellow   , MB.depot = Depot $ Dice 5}
-    , MB.addToLayout MB.Slot{MB.color = Just Green    , MB.depot = Depot $ Dice 6}
-    , MB.addToLayout MB.Slot{MB.color = Just Brown    , MB.depot = Depot $ Dice 6}
-    , MB.addToLayout MB.Slot{MB.color = Nothing       , MB.depot = BlackDepot}
-    , MB.addToLayout MB.Slot{MB.color = Nothing       , MB.depot = BlackDepot}
-    , MB.addToLayout MB.Slot{MB.color = Nothing       , MB.depot = BlackDepot}
-    , MB.addToLayout MB.Slot{MB.color = Nothing       , MB.depot = BlackDepot}
+    [ MB.addToLayout MB.Slot{MB.color = Just Blue     , MB.depot = MB.Depot $ Dice 1}
+    , MB.addToLayout MB.Slot{MB.color = Just Brown    , MB.depot = MB.Depot $ Dice 1}
+    , MB.addToLayout MB.Slot{MB.color = Just Burgundy , MB.depot = MB.Depot $ Dice 2}
+    , MB.addToLayout MB.Slot{MB.color = Just Yellow   , MB.depot = MB.Depot $ Dice 2}
+    , MB.addToLayout MB.Slot{MB.color = Just Green    , MB.depot = MB.Depot $ Dice 3}
+    , MB.addToLayout MB.Slot{MB.color = Just Brown    , MB.depot = MB.Depot $ Dice 3}
+    , MB.addToLayout MB.Slot{MB.color = Just Blue     , MB.depot = MB.Depot $ Dice 4}
+    , MB.addToLayout MB.Slot{MB.color = Just Brown    , MB.depot = MB.Depot $ Dice 4}
+    , MB.addToLayout MB.Slot{MB.color = Just Silver   , MB.depot = MB.Depot $ Dice 5}
+    , MB.addToLayout MB.Slot{MB.color = Just Yellow   , MB.depot = MB.Depot $ Dice 5}
+    , MB.addToLayout MB.Slot{MB.color = Just Green    , MB.depot = MB.Depot $ Dice 6}
+    , MB.addToLayout MB.Slot{MB.color = Just Brown    , MB.depot = MB.Depot $ Dice 6}
+    , MB.addToLayout MB.Slot{MB.color = Nothing       , MB.depot = MB.BlackDepot}
+    , MB.addToLayout MB.Slot{MB.color = Nothing       , MB.depot = MB.BlackDepot}
+    , MB.addToLayout MB.Slot{MB.color = Nothing       , MB.depot = MB.BlackDepot}
+    , MB.addToLayout MB.Slot{MB.color = Nothing       , MB.depot = MB.BlackDepot}
     ]
 standardMainBoard 3 = MB.build (standardMainBoard 2)
-    [ MB.addToLayout MB.Slot{MB.color = Just Yellow   , MB.depot = Depot $ Dice 1}
-    , MB.addToLayout MB.Slot{MB.color = Just Brown    , MB.depot = Depot $ Dice 2}
-    , MB.addToLayout MB.Slot{MB.color = Just Blue     , MB.depot = Depot $ Dice 3}
-    , MB.addToLayout MB.Slot{MB.color = Just Green    , MB.depot = Depot $ Dice 4}
-    , MB.addToLayout MB.Slot{MB.color = Just Brown    , MB.depot = Depot $ Dice 5}
-    , MB.addToLayout MB.Slot{MB.color = Just Burgundy , MB.depot = Depot $ Dice 6}
-    , MB.addToLayout MB.Slot{MB.color = Nothing       , MB.depot = BlackDepot}
-    , MB.addToLayout MB.Slot{MB.color = Nothing       , MB.depot = BlackDepot}
+    [ MB.addToLayout MB.Slot{MB.color = Just Yellow   , MB.depot = MB.Depot $ Dice 1}
+    , MB.addToLayout MB.Slot{MB.color = Just Brown    , MB.depot = MB.Depot $ Dice 2}
+    , MB.addToLayout MB.Slot{MB.color = Just Blue     , MB.depot = MB.Depot $ Dice 3}
+    , MB.addToLayout MB.Slot{MB.color = Just Green    , MB.depot = MB.Depot $ Dice 4}
+    , MB.addToLayout MB.Slot{MB.color = Just Brown    , MB.depot = MB.Depot $ Dice 5}
+    , MB.addToLayout MB.Slot{MB.color = Just Burgundy , MB.depot = MB.Depot $ Dice 6}
+    , MB.addToLayout MB.Slot{MB.color = Nothing       , MB.depot = MB.BlackDepot}
+    , MB.addToLayout MB.Slot{MB.color = Nothing       , MB.depot = MB.BlackDepot}
     ]
 standardMainBoard 4 = MB.build (standardMainBoard 3)
-    [ MB.addToLayout MB.Slot{MB.color = Just Green  , MB.depot = Depot $ Dice 1}
-    , MB.addToLayout MB.Slot{MB.color = Just Brown  , MB.depot = Depot $ Dice 2}
-    , MB.addToLayout MB.Slot{MB.color = Just Yellow , MB.depot = Depot $ Dice 3}
-    , MB.addToLayout MB.Slot{MB.color = Just Silver , MB.depot = Depot $ Dice 4}
-    , MB.addToLayout MB.Slot{MB.color = Just Brown  , MB.depot = Depot $ Dice 5}
-    , MB.addToLayout MB.Slot{MB.color = Just Blue   , MB.depot = Depot $ Dice 6}
-    , MB.addToLayout MB.Slot{MB.color = Nothing     , MB.depot = BlackDepot}
-    , MB.addToLayout MB.Slot{MB.color = Nothing     , MB.depot = BlackDepot}
+    [ MB.addToLayout MB.Slot{MB.color = Just Green  , MB.depot = MB.Depot $ Dice 1}
+    , MB.addToLayout MB.Slot{MB.color = Just Brown  , MB.depot = MB.Depot $ Dice 2}
+    , MB.addToLayout MB.Slot{MB.color = Just Yellow , MB.depot = MB.Depot $ Dice 3}
+    , MB.addToLayout MB.Slot{MB.color = Just Silver , MB.depot = MB.Depot $ Dice 4}
+    , MB.addToLayout MB.Slot{MB.color = Just Brown  , MB.depot = MB.Depot $ Dice 5}
+    , MB.addToLayout MB.Slot{MB.color = Just Blue   , MB.depot = MB.Depot $ Dice 6}
+    , MB.addToLayout MB.Slot{MB.color = Nothing     , MB.depot = MB.BlackDepot}
+    , MB.addToLayout MB.Slot{MB.color = Nothing     , MB.depot = MB.BlackDepot}
     ]
 
 sortedRange :: [Hex.Hex]
@@ -119,4 +119,29 @@ standardSlots =
 standardPlayerBoard :: PB.PlayerBoard
 standardPlayerBoard = PB.build PB.blank
     [ PB.setLayout $ zip sortedRange standardSlots
+    ]
+
+typicalPlayerBoard :: PB.PlayerBoard
+typicalPlayerBoard = PB.build standardPlayerBoard
+    [ PB.incSilverling 3
+    , PB.incWorker 2
+    , PB.incVictoryTrack 26
+    , PB.addDiceAction (PB.Standard $ Dice 4)
+    , PB.addDiceAction (PB.Standard $ Dice 2)
+    , PB.addDiceAction PB.Buy
+    , PB.addToStorage (Pasture Cow 3)
+    , PB.addToStorage (Castle)
+    , PB.addToDock (GoodsTile $ Dice 3)
+    , PB.addToDock (GoodsTile $ Dice 3)
+    , PB.addToDock (GoodsTile $ Dice 2)
+    , PB.addToShipped (GoodsTile $ Dice 1)
+    , PB.addToShipped (GoodsTile $ Dice 6)
+    , PB.addToShipped (GoodsTile $ Dice 4)
+    , PB.addToShipped (GoodsTile $ Dice 4)
+    , PB.placeHex Castle (Hex.Axial 0 0)
+    , PB.placeHex Boat (Hex.Axial (-1) 1)
+    , PB.placeHex (Pasture Cow 4) (Hex.Axial (-1) 2)
+    , PB.placeHex (Building Church) (Hex.Axial 0 1)
+    , PB.placeHex (Pasture Pig 3) (Hex.Axial 0 2)
+    , PB.placeHex Mine (Hex.Axial (-1) 0)
     ]

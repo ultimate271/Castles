@@ -2,11 +2,7 @@ module Enum.Enum
     ( Color (..)
     , HexTile (..)
     , Dice (..)
-    , DiceAction (..)
     , GoodsTile (..)
-    , Player (..)
-    , TurnOrder (..)
-    , Depot (..)
     --Imported from enum.knowledge
     , Animal (..)
     , Building (..)
@@ -14,19 +10,10 @@ module Enum.Enum
     , BonusType (..)
     , BonusTile (..)
     , getColor
-    , getAction
     ) where
 
 import Enum.Knowledge
 
-data Player = Player
-    { name :: String
-    , id :: Int
-    } deriving (Show, Eq)
-data TurnOrder = TurnOrder Int Int
-    deriving (Show, Eq)
-instance Ord TurnOrder where
-    (<=) (TurnOrder i j) (TurnOrder i' j') = i <= i' || i == i' && j <= j'
 data HexTile
     = Castle              -- Burgundy
     | Mine                -- Silver
@@ -34,7 +21,7 @@ data HexTile
     | Pasture Animal Int  -- Green
     | Building Building   -- Brown
     | Knowledge Knowledge -- Yellow
-    deriving (Show, Eq)
+    deriving (Show, Eq, Ord)
 data Color
     = Burgundy   -- Castle
     | Silver     -- Mine
@@ -48,17 +35,6 @@ data GoodsTile = GoodsTile Dice
 newtype Dice = Dice Int deriving (Show, Eq, Ord)
 data BonusType = BigBonus | SmallBonus deriving (Eq, Show)
 data BonusTile = BonusTile Color BonusType deriving (Eq, Show)
-data DiceAction
-    = Standard Dice
-    | Free
-    | Pull [Color]
-    | Push
-    | Ship
-    | DrawGoods
-    | Buy
-    deriving (Eq, Show)
-data Depot = BlackDepot | Depot Dice
-    deriving (Show, Eq)
 
 getColor :: HexTile -> Color
 getColor Castle        = Burgundy
@@ -68,11 +44,3 @@ getColor (Pasture _ _) = Green
 getColor (Building _)  = Brown
 getColor (Knowledge _) = Yellow
 
-getAction :: HexTile -> Maybe DiceAction
-getAction Castle               = Just Free
-getAction (Building Warehouse) = Just Ship
-getAction (Building Carpenter) = Just (Pull [Brown])
-getAction (Building Church)    = Just (Pull [Burgundy, Silver, Yellow])
-getAction (Building Market)    = Just (Pull [Blue, Green])
-getAction (Building CityHall)  = Just Push
-getAction _                    = Nothing

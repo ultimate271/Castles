@@ -1,6 +1,7 @@
 module Core.PlayerBoard
     ( PlayerBoard
     , Slot (..)
+    , DiceAction (..)
     --Builders
     , blank
     , incSilverling
@@ -44,6 +45,15 @@ data Slot = Slot
     { color :: Color
     , dice :: Dice
     } deriving (Show)
+data DiceAction
+    = Standard Dice
+    | Free
+    | Pull [Color]
+    | Push
+    | Ship
+    | DrawGoods
+    | Buy
+    deriving (Eq, Show)
 
 data PlayerBoard = PlayerBoard
     { actions         :: [DiceAction]
@@ -172,3 +182,11 @@ allHexesPlayed :: [Hex] -> PlayerBoard -> [HexTile]
 allHexesPlayed rng PlayerBoard{lattice = l} =
     catMaybes $ l <$> rng
 
+getAction :: HexTile -> Maybe DiceAction
+getAction Castle               = Just Free
+getAction (Building Warehouse) = Just Ship
+getAction (Building Carpenter) = Just (Pull [Brown])
+getAction (Building Church)    = Just (Pull [Burgundy, Silver, Yellow])
+getAction (Building Market)    = Just (Pull [Blue, Green])
+getAction (Building CityHall)  = Just Push
+getAction _                    = Nothing

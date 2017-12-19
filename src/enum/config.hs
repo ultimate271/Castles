@@ -1,6 +1,5 @@
 module Enum.Config
     ( Config (..)
-    , depots
     , blank
     ) where
 
@@ -27,5 +26,3 @@ blank = Config
     , turnsPerPhase = 0
     }
 
-depots :: Config -> [Depot]
-depots Config{diceSize = d} = BlackDepot:[Depot $ Dice i | i <- [1..d]]
