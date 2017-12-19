@@ -6,6 +6,8 @@ module Core.PlayerBoard
     , incSilverling
     , incWorker
     , incVictoryTrack
+    , addDiceAction
+    , removeDiceAction
     , addToStorage
     , removeFromStorage
     , addToDock
@@ -101,6 +103,14 @@ incWorker i p@PlayerBoard{workerCount = w} =
 incVictoryTrack :: Int -> PlayerBoard -> PlayerBoard
 incVictoryTrack i p@PlayerBoard{victoryTrack = v} =
     p {victoryTrack = v + i}
+
+addDiceAction :: DiceAction -> PlayerBoard -> PlayerBoard
+addDiceAction d p@PlayerBoard{actions = ds} =
+    p {actions = d:ds}
+
+removeDiceAction :: DiceAction -> PlayerBoard -> PlayerBoard
+removeDiceAction d p@PlayerBoard{actions = ds} =
+    p {actions = delete d ds}
 
 addToStorage :: HexTile -> PlayerBoard -> PlayerBoard
 addToStorage h p@PlayerBoard{storage = hs} =

@@ -92,7 +92,7 @@ standardSlots =
     , PB.Slot{PB.color = Blue, PB.dice = Dice 6}
     , PB.Slot{PB.color = Blue, PB.dice = Dice 1}
     , PB.Slot{PB.color = Blue, PB.dice = Dice 2}
-    , PB.Slot{PB.color = Green, PB.dice = Dice 6}
+    , PB.Slot{PB.color = Burgundy, PB.dice = Dice 6}
     , PB.Slot{PB.color = Blue, PB.dice = Dice 5}
     , PB.Slot{PB.color = Blue, PB.dice = Dice 4}
     , PB.Slot{PB.color = Blue, PB.dice = Dice 1}

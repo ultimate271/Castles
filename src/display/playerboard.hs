@@ -7,7 +7,7 @@ import Enum.Enum
 import Enum.Hex
 import Text.Regex (mkRegex, subRegex)
 import Text.Printf
-import Data.List (group, sort)
+import Data.List (group, sort, find, deleteBy)
 
 h2i :: PlayerBoard -> Hex -> String
 h2i p h = case lattice p h of
@@ -53,17 +53,79 @@ g2i :: Maybe GoodsTile -> String
 g2i Nothing = "   "
 g2i (Just (GoodsTile (Dice i))) = " " ++ show i ++ " "
 
+--Goods r (I wasn't even high when I came up with r) to intials
 gr2i :: Maybe [GoodsTile] -> String
 gr2i Nothing = "   "
 gr2i (Just gs) = "x" ++ show (length gs) ++ " "
 
+--storages to initials
+ss2i :: Maybe HexTile -> String
+ss2i Nothing = "   "
+ss2i (Just h) = ht2i h
+
+--Action to Initials
+ac2i :: Maybe DiceAction -> String
+ac2i Nothing = "    "
+ac2i (Just (Standard (Dice i))) = "D" ++ show i ++ "  "
+ac2i (Just Free) = "Free"
+ac2i (Just (Pull (Brown:_))) = "PB  "
+ac2i (Just (Pull (Burgundy:_))) = "PCMK"
+ac2i (Just (Pull (Silver:_))) = "PCMK"
+ac2i (Just (Pull (Yellow:_))) = "PCMK"
+ac2i (Just (Pull (Green:_))) = "PPS "
+ac2i (Just (Pull (Blue:_))) = "PPS "
+ac2i (Just (Pull [])) = "ERR"
+ac2i (Just Push) = "Push"
+ac2i (Just Ship) = "Ship"
+ac2i (Just DrawGoods) = "Draw"
+ac2i (Just Buy) = "Buy "
+
+--BonusTile to Intials
+bt2i :: Maybe BonusTile -> String
+bt2i Nothing = " "
+bt2i (Just (BonusTile Burgundy BigBonus)) = "C"
+bt2i (Just (BonusTile Burgundy SmallBonus)) = "c"
+bt2i (Just (BonusTile Silver BigBonus)) = "M"
+bt2i (Just (BonusTile Silver SmallBonus)) = "m"
+bt2i (Just (BonusTile Blue BigBonus)) = "S"
+bt2i (Just (BonusTile Blue SmallBonus)) = "s"
+bt2i (Just (BonusTile Green BigBonus)) = "G"
+bt2i (Just (BonusTile Green SmallBonus)) = "g"
+bt2i (Just (BonusTile Brown BigBonus)) = "B"
+bt2i (Just (BonusTile Brown SmallBonus)) = "b"
+bt2i (Just (BonusTile Yellow BigBonus)) = "Y"
+bt2i (Just (BonusTile Yellow SmallBonus)) = "y"
+
+--Return True if the dice action is a candidate for {im}
+isImmediate :: DiceAction -> Bool
+isImmediate (Standard _) = False
+isImmediate Buy = False
+isImmediate Free = True
+isImmediate (Pull _) = True
+isImmediate Push = True
+isImmediate Ship = True
+isImmediate DrawGoods = True
+
+--Return True if the dice action is stardard
+isStandard :: DiceAction -> Bool
+isStandard (Standard _) = True
+isStandard _ = False
+
+--Return True if the dice action is buy
+isBuy :: DiceAction -> Bool
+isBuy Buy = True
+isBuy _ = False
+
+--Returns a list that is always size i or greater,
+--padded by "Nothings" if its too small
 padList :: [a] -> Int -> [Maybe a]
 padList [] i = if i > 0 then Nothing : padList [] (i-1) else []
 padList (x:xs) i = Just x : padList xs (i - 1)
 
+--All hail the spghetti monster!
 display :: PlayerBoard -> String
 display p = foldr (\(a,b) s -> subRegex (mkRegex a) s b) raw subs where
-    subs = cs ++ ds ++ gs ++ xs ++ hs
+    subs = cs ++ ds ++ gs ++ xs ++ hs ++ ss ++ bonus ++ as ++ other
     cs = zip
         ([printf "c%02d" (n::Int) | n <- [0..36]])
         (h2i p <$> sortedRange)
@@ -80,11 +142,27 @@ display p = foldr (\(a,b) s -> subRegex (mkRegex a) s b) raw subs where
     hs = zip
         ([printf "h%02d" (n::Int) | n <- [1..6]])
         ((\i -> " " ++ show i ++ " ") <$> ((\g -> (length . filter (== g)) (shipped p)) <$> goodsList))
---          ([1..6] >>= (GoodsTile $ Dice))
---
---          ([show $ length . filter (== g) $ shipped p | i <- [1..6], g <- GoodsTile $ Dice i])
+    ss = zip
+        ([printf "s%02d" (n::Int) | n <- [1..3]])
+        (ss2i <$> padList (storage p) 3)
+    bonusList = [BonusTile c t
+        | t <- [BigBonus, SmallBonus]
+        , c <- ([minBound..maxBound] :: [Color])]
+    bonus =
+        [ ("{bonusTiles}", (\b -> find (== b) $ bonusTiles p) <$> bonusList >>= bt2i)]
+    as =
+        [ ("{im}", ac2i $ find isImmediate $ actions p)
+        , ("{a1}", ac2i $ find (isStandard) $ actions p)
+        , ("{a2}", ac2i $ find (isStandard) $ deleteBy (\_ -> isStandard) Free $ actions p) --This is really hacky and should be fixed asap
+        , ("{bu}", ac2i $ find isBuy $ actions p)
+        ]
+    other =
+        [ ("{sc}", printf "%02d  " $ silverlingCount p)
+        , ("{wc}", printf "%02d  " $ workerCount p)
+        , ("{vt}", printf "%03d " $ victoryTrack p)
+        ]
 
-
+--The string used by display, with patterns to be replaced
 raw :: String
 raw =
     "  Dock:                     / \\   / \\   / \\   / \\            Actions:        \n\
@@ -141,7 +219,7 @@ raw =
 --    \ /   \ /   \ /         \ /   \ /   \ /   \ /                            \
 
 --------------------------------------------------------------------------------
---This is an example instance of display p
+--This is an example instance of display p (its a touch outdated, and I don't feel like replacing it)
 --------------------------------------------------------------------------------
 --  Dock                     / \   / \   / \   / \         Shipped:
 --   --- --- ---            /   \ /   \ /   \ /   \        --- --- ---

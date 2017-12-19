@@ -4,3 +4,4 @@
 commitmsg
 .projections.json
 .stack-work
+*.swo

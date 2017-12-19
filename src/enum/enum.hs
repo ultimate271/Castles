@@ -11,6 +11,7 @@ module Enum.Enum
     , Animal (..)
     , Building (..)
     , Knowledge (..)
+    , BonusType (..)
     , BonusTile (..)
     , getColor
     , getAction
@@ -41,7 +42,7 @@ data Color
     | Green      -- Pasture
     | Brown      -- Building
     | Yellow     -- Knowledge
-    deriving (Show, Eq)
+    deriving (Show, Eq, Enum, Bounded)
 data GoodsTile = GoodsTile Dice
     deriving (Show, Eq, Ord)
 newtype Dice = Dice Int deriving (Show, Eq, Ord)
@@ -54,6 +55,7 @@ data DiceAction
     | Push
     | Ship
     | DrawGoods
+    | Buy
     deriving (Eq, Show)
 data Depot = BlackDepot | Depot Dice
     deriving (Show, Eq)
