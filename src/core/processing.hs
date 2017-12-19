@@ -2,24 +2,34 @@ module Core.Processing
     ( validateState
     , getActions
     , doAction
-    )
+    ) where
 
-import Core.State
-import qualified Core.Action as A
-import Enum.Enum
+import           Enum.Enum
+import           Enum.Hex         (Hex)
+import qualified Enum.Hex         as Hex
+import           Core.MainBoard   (MainBoard)
+import qualified Core.MainBoard   as MB
+import           Core.PlayerBoard (PlayerBoard)
+import qualified Core.PlayerBoard as PB
+import           Enum.Config      (Config)
+import qualified Enum.Config      as CFG
+import           Core.State       (State)
+import qualified Core.State       as S
+import           Core.Action      (Action)
+import qualified Core.Action      as A
 
 validateState :: State -> State -> State
 -- ^Function that takes a base state, and a subsequent state, and returns the
 -- subsequent state, with a state error if it is invalid.
 validateState s t = t
 
-getActions :: A.Action a => State -> [a]
+getActions :: Action a => State -> [a]
 -- ^Function that takes a state and returns a list of valid actions
 -- that can be taken on that state.
 getActions s = []
 
 
-doAction :: A.Action a => a -> State -> State
+doAction :: Action a => a -> State -> State
 -- ^Function that takes an action and a state, and returns the state
 -- that is acquired from taking that action on that state
 doAction = A.doAction

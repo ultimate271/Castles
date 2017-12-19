@@ -19,7 +19,6 @@ executable castles
   default-language:    Haskell2010
   other-modules:       Builtin
                        , Core.Action
-                       , Core.GameState
                        , Core.MainBoard
                        , Core.PlayerBoard
                        , Core.State

@@ -2,9 +2,9 @@ module Display.PlayerBoard where
 
 import Core.PlayerBoard
 import Builtin
-
 import Enum.Enum
 import Enum.Hex
+
 import Text.Regex (mkRegex, subRegex)
 import Text.Printf
 import Data.List (group, sort, find, deleteBy)

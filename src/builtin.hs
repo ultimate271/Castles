@@ -1,5 +1,17 @@
 module Builtin where
 
+import           Enum.Enum
+import           Enum.Hex (Hex)
+import qualified Enum.Hex         as Hex
+import           Core.PlayerBoard (PlayerBoard)
+import qualified Core.PlayerBoard as PB
+import           Core.MainBoard (MainBoard)
+import qualified Core.MainBoard   as MB
+import           Core.State (State)
+import qualified Core.State       as S
+import           Core.Action (Action)
+import qualified Core.Action      as A
+
 import Enum.Enum
 import qualified Enum.Hex as Hex
 import qualified Enum.Config as CFG

@@ -24,20 +24,19 @@ module Core.State
     , allGoods
     , phaseNumber
     , turnNumber
-    --Pass Through
-    , StateError (..)
-    , Phase (..)
-    , GameState (..)
     ) where
 
-import Enum.Enum
-import qualified Enum.Config as CFG
-import Enum.Hex (Hex)
-import qualified Enum.Hex as Hex (range, center)
-import qualified Core.MainBoard as MB
+import           Enum.Enum
+import           Enum.Hex         (Hex)
+import qualified Enum.Hex         as Hex
+import           Core.MainBoard   (MainBoard)
+import qualified Core.MainBoard   as MB
+import           Core.PlayerBoard (PlayerBoard)
 import qualified Core.PlayerBoard as PB
+import           Enum.Config      (Config)
+import qualified Enum.Config      as CFG
 
-import Data.List (sortBy, delete)
+import           Data.List (sortBy, delete)
 
 data Player = Player
     { name :: String
@@ -65,8 +64,8 @@ data GameState
     deriving (Eq, Show)
 
 data State = State
-    { mainBoard      :: MB.MainBoard
-    , playerBoards   :: Player -> PB.PlayerBoard
+    { mainBoard      :: MainBoard
+    , playerBoards   :: Player -> PlayerBoard
     , bank           :: [(MB.Slot, [HexTile])]
     , discard        :: [HexTile]
     , shipmentTrack  :: [GoodsTile]
@@ -139,10 +138,10 @@ addToBank ts s@State{bank = b} = s{bank = b ++ ts}
 -- to Distribute and Disperse
 --fillBank (hs, ss) (hl, sl) s = s { bank = hl s hs , shipmentTrack = sl s ss }
 
-addMainBoard :: MB.MainBoard -> State -> State
+addMainBoard :: MainBoard -> State -> State
 addMainBoard m s = s{mainBoard = m}
 
-addPlayerBoard :: Player -> PB.PlayerBoard -> State -> State
+addPlayerBoard :: Player -> PlayerBoard -> State -> State
 addPlayerBoard p pb s@State{playerBoards = pb'} =
     s {playerBoards = \p' -> if p' == p then pb else pb' p'}
 
@@ -166,7 +165,7 @@ kill e s = s {gameState = StateError e}
 --------------------------------------------------------------------------------
 --------------------------------------------------------------------------------
 
-pbList :: State -> [PB.PlayerBoard]
+pbList :: State -> [PlayerBoard]
 -- ^Returns the list of PlayerBoards
 pbList s = (playerBoards s) <$> (players s)
 

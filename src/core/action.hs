@@ -4,14 +4,20 @@ module Core.Action
     , Action(doAction)
     ) where
 
-import Enum.Enum
-import Enum.Hex
+import           Enum.Enum
+import           Enum.Hex         (Hex)
+import qualified Enum.Hex         as Hex
+import           Core.MainBoard   (MainBoard)
+import qualified Core.MainBoard   as MB
+import           Core.PlayerBoard (PlayerBoard)
 import qualified Core.PlayerBoard as PB
-import qualified Core.MainBoard as MB
-import qualified Core.State as S
+import           Enum.Config      (Config)
+import qualified Enum.Config      as CFG
+import           Core.State       (State)
+import qualified Core.State       as S
 
 class Action a where
-    doAction :: a -> S.State -> S.State
+    doAction :: a -> State -> State
 
 data PlayerAction
     --Draw a hex from the main board and put it in your storage area

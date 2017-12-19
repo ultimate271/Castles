@@ -1,7 +1,9 @@
 module Core.MainBoard
+    --Data
     ( MainBoard
     , Slot (..)
     , Depot (..)
+    --Builders
     , blank
     , addToMarket
     , addToWarehouse
@@ -9,6 +11,7 @@ module Core.MainBoard
     , removeFromMarket
     , removeFromWarehouse
     , build
+    --Retrievers
     , allHexes
     , allGoods
     , toString

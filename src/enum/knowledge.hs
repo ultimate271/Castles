@@ -1,4 +1,8 @@
-module Enum.Knowledge where
+module Enum.Knowledge
+    ( Animal (..)
+    , Building (..)
+    , Knowledge (..)
+    ) where
 
 data Animal = Cow | Pig | Chicken | Sheep
     deriving (Show, Eq, Ord, Enum, Bounded)
