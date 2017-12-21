@@ -1,5 +1,6 @@
 module Main where
 
+import           Data.Fugue
 import           Enum.Enum
 import           Enum.Hex            (Hex)
 import qualified Enum.Hex            as Hex
