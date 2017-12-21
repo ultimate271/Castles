@@ -73,6 +73,28 @@ standardMainBoard 4 = MB.build (standardMainBoard 3)
     , MB.addToLayout MB.Slot{MB.color = Nothing     , MB.depot = MB.BlackDepot}
     ]
 
+typicalMainBoard :: MainBoard
+typicalMainBoard = MB.build (standardMainBoard 4)
+    [ MB.addToMarket (MB.Depot $ Dice 1) Castle
+    , MB.addToMarket (MB.Depot $ Dice 1) Boat
+    , MB.addToMarket (MB.Depot $ Dice 2) (Pasture Cow 3)
+    , MB.addToMarket (MB.Depot $ Dice 2) (Mine)
+    , MB.addToMarket (MB.Depot $ Dice 3) (Knowledge Unrestrict)
+    , MB.addToMarket (MB.Depot $ Dice 3) (Building Church)
+    , MB.addToMarket (MB.Depot $ Dice 3) Castle
+    , MB.addToMarket (MB.Depot $ Dice 6) (Building Warehouse)
+    , MB.addToMarket MB.BlackDepot Castle
+    , MB.addToMarket MB.BlackDepot Boat
+    , MB.addToMarket MB.BlackDepot Boat
+    , MB.addToMarket MB.BlackDepot Mine
+    , MB.addToMarket MB.BlackDepot Mine
+    , MB.addToMarket MB.BlackDepot (Pasture Pig 4)
+    , MB.addToWarehouse (MB.Depot $ Dice 1) (GoodsTile $ Dice 4)
+    , MB.addToWarehouse (MB.Depot $ Dice 1) (GoodsTile $ Dice 2)
+    , MB.addToWarehouse (MB.Depot $ Dice 3) (GoodsTile $ Dice 6)
+    , MB.addToWarehouse (MB.Depot $ Dice 6) (GoodsTile $ Dice 6)
+    ]
+
 sortedRange :: [Hex.Hex]
 sortedRange = sortBy sorter $ Hex.range (Hex.toAxial Hex.center) 3
   where sorter :: Hex.Hex -> Hex.Hex -> Ordering

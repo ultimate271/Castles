@@ -15,6 +15,10 @@ module Core.MainBoard
     , allHexes
     , allGoods
     , toString
+    --Is there a better way to do this?
+    , market
+    , warehouse
+    , layout
     ) where
 
 import Enum.Enum
