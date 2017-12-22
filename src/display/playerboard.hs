@@ -1,11 +1,14 @@
-module Display.PlayerBoard where
+module Display.PlayerBoard (display) where
 
 import Core.PlayerBoard
 import Builtin
 import Enum.Enum
 import Enum.Hex
 
-import Text.Regex (mkRegex, subRegex)
+import Display.Common
+
+import Data.Fugue (replaceAll, padList)
+--import Text.Regex (mkRegex, subRegex)
 import Text.Printf
 import Data.List (group, sort, find, deleteBy)
 
@@ -23,19 +26,7 @@ ps2i p h = case lattice p h of
         Just s -> s2d s
         Nothing -> "ERR"
 
---Hex Tile To Initials
-ht2i :: HexTile -> String
-ht2i Castle = "CAS"
-ht2i Mine = "MIN"
-ht2i Boat = "BOT"
-ht2i (Pasture Cow x) = "PC" ++ show x
-ht2i (Pasture Sheep x) = "PS" ++ show x
-ht2i (Pasture Pig x) = "PP" ++ show x
-ht2i (Pasture Chicken x) = "PH" ++ show x
-ht2i (Building b) = printf "B%02d" $ fromEnum b
-ht2i (Knowledge k) = printf "K%02d" $ fromEnum k
-
---Slot to Initials
+--PlayerBoard Slot to Initials
 s2i :: Slot -> String
 s2i Slot{color = Burgundy} = " c "
 s2i Slot{color = Silver} = " m "
@@ -48,12 +39,7 @@ s2i Slot{color = Yellow} = " k "
 s2d :: Slot -> String
 s2d Slot{dice = Dice i} = " " ++ show i ++ " "
 
---Maybe Goods to Initials
-g2i :: Maybe GoodsTile -> String
-g2i Nothing = "   "
-g2i (Just (GoodsTile (Dice i))) = " " ++ show i ++ " "
-
---Goods r (I wasn't even high when I came up with r) to intials
+--Goods range to intials
 gr2i :: Maybe [GoodsTile] -> String
 gr2i Nothing = "   "
 gr2i (Just gs) = "x" ++ show (length gs) ++ " "
@@ -116,15 +102,10 @@ isBuy :: DiceAction -> Bool
 isBuy Buy = True
 isBuy _ = False
 
---Returns a list that is always size i or greater,
---padded by "Nothings" if its too small
-padList :: [a] -> Int -> [Maybe a]
-padList [] i = if i > 0 then Nothing : padList [] (i-1) else []
-padList (x:xs) i = Just x : padList xs (i - 1)
 
 --All hail the spghetti monster!
 display :: PlayerBoard -> String
-display p = foldr (\(a,b) s -> subRegex (mkRegex a) s b) raw subs where
+display p = replaceAll raw subs where
     subs = cs ++ ds ++ gs ++ xs ++ hs ++ ss ++ bonus ++ as ++ other
     cs = zip
         ([printf "c%02d" (n::Int) | n <- [0..36]])
@@ -134,7 +115,7 @@ display p = foldr (\(a,b) s -> subRegex (mkRegex a) s b) raw subs where
         (ps2i p <$> sortedRange)
     gs = zip
         ([printf "g%02d" (n::Int) | n <- [1..3]])
-        (g2i <$> (padList (head <$> (group . sort $ dock p)) 3))
+        (mg2i <$> (padList (head <$> (group . sort $ dock p)) 3))
     xs = zip
         ([printf "x%02d" (n::Int) | n <- [1..3]])
         (gr2i <$> (padList (group . sort $ dock p) 3))

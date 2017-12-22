@@ -16,7 +16,8 @@ import           Core.Action         (Action)
 import qualified Core.Action         as A
 import qualified Core.Processing     as Proc
 import           Builtin
-import           Display.PlayerBoard (display)
+import qualified Display.PlayerBoard as PB
+import qualified Display.MainBoard   as MB
 
 main :: IO ()
 main = putStrLn "Not implemented"
