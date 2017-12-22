@@ -1,4 +1,4 @@
-module Fugue
+module Data.Fugue
     ( replace
     ) where
 
@@ -18,12 +18,25 @@ minus = deleteFirstsBy (==)
 --or
 --minus = Data.List.deleteFirstsBy (==)
 
+
 replace :: Eq a => ([a], [a]) -> [a] -> [a]
 replace _ [] = []
 replace p@(pat, rep) i@(s:ss) =
     if i `startsWith` pat
     then rep ++ replace p (i `minus` pat)
     else s : replace p ss
+
+--Keep replacing until the string doesn't change
+replaceFixedPoint :: Eq a => ([a], [a]) -> [a] -> [a]
+replaceFixedPoint p i =
+    if i == i' then i else replaceFixedPoint p i' where i' = replace p i
+
+replaceAll :: Eq a => [a] -> [([a], [a])] -> [a]
+replaceAll = foldr replace
+
+replaceAllFixedPoint :: Eq a => [a] -> [([a],[a])] -> [a]
+replaceAllFixedPoint i ps =
+    if i == i' then i else replaceAllFixedPoint i' ps where i' = replaceAll i ps
 --removeElement :: (a -> Bool) -> [a] -> [a]
 ---- ^Removes 0 or 1 elements from a list meeting the condition
 --removeElement _ [] = []
