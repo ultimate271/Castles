@@ -4,10 +4,11 @@ module Data.Fugue
     , replaceFP
     , replaceAllFP
     , padList
+    , isSubsetOf
     ) where
 
 --import Enum.Enum
-import Data.List (deleteFirstsBy)
+import Data.List (delete, deleteFirstsBy)
 
 startsWith :: Eq a => [a] -> [a] -> Bool
 startsWith _ [] = True   --It is always the case that [a, b, c] starts with []
@@ -45,3 +46,10 @@ padList :: [a] -> Int -> [Maybe a]
 --padded by "Nothings" if its too small
 padList [] i = if i > 0 then Nothing : padList [] (i-1) else []
 padList (x:xs) i = Just x : padList xs (i - 1)
+
+isSubsetOf :: Eq a => [a] -> [a] -> Bool
+isSubsetOf [] _ = True
+isSubsetOf (x:xs) ys =
+    if elem x ys
+    then isSubsetOf xs (delete x ys)
+    else False

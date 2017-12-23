@@ -14,6 +14,8 @@ module Enum.Enum
 
 import Enum.Knowledge
 
+class Colorable c where
+    color :: c -> Color
 data HexTile
     = Castle              -- Burgundy
     | Mine                -- Silver
@@ -22,6 +24,8 @@ data HexTile
     | Building Building   -- Brown
     | Knowledge Knowledge -- Yellow
     deriving (Show, Eq, Ord)
+instance Colorable HexTile where
+    color = getColor
 data Color
     = Burgundy   -- Castle
     | Silver     -- Mine

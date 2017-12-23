@@ -66,7 +66,7 @@ data GameState
 data State = State
     { mainBoard      :: MainBoard
     , playerBoards   :: Player -> PlayerBoard
-    , bank           :: [(MB.Slot, [HexTile])]
+    , bank           :: MB.Depot -> MB.Slot -> [HexTile]
     , discard        :: [HexTile]
     , shipmentTrack  :: [GoodsTile]
     , players        :: [Player]
@@ -79,7 +79,7 @@ instance Show State where
     show s = "State "
         ++ "{ mainBoard = "      ++ MB.toString (depots s) (mainBoard s)
         ++ ", playerBoards = "   ++ showPlayerBoards
-        ++ ", bank = "           ++ (show $ bank s)
+        ++ ", bank = "           ++ "Not Implemented"
         ++ ", discard = "        ++ (show $ discard s)
         ++ ", shipmentTrack = "  ++ (show $ shipmentTrack s)
         ++ ", players = "        ++ (show $ players s)
@@ -109,7 +109,7 @@ blank :: State
 blank = State
     { mainBoard      = MB.blank
     , playerBoards   = \_ -> PB.blank
-    , bank           = []
+    , bank           = \_ _ -> []
     , discard        = []
     , shipmentTrack  = []
     , players        = []
@@ -127,11 +127,12 @@ addPlayer :: Player -> State -> State
 -- ^Returns a state that is just like s but with p added to players
 addPlayer p s@State{players = ps} = s{players = p:ps}
 
-addToBank :: [(MB.Slot, [HexTile])] -> State -> State
+addToBank :: MB.Depot -> MB.Slot -> [HexTile] -> State -> State
 -- ^Adds the HexTiles to the bank
 -- Note that this does not add hextiles to an existing slot, this creates a new
 -- slot on the board with new hextiles in it.
-addToBank ts s@State{bank = b} = s{bank = b ++ ts}
+addToBank d l hs s@State{bank = b} = 
+    s{bank = \d' l' ->  b ++ ts}
 
 --fillBank :: ([HexTile], [GoodsTile]) -> (Distribute, Disperse) -> State -> State
 -- ^Returns a state where the bank and shipment track have been added according
