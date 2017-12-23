@@ -1,3 +1,5 @@
+{-# LANGUAGE MultiParamTypeClasses #-}
+
 module Core.PlayerBoard
     ( PlayerBoard
     , Slot (..)
@@ -45,6 +47,8 @@ data Slot = Slot
     { color :: Color
     , dice :: Dice
     } deriving (Show)
+instance Colorable Color Slot where
+    getColor = color
 data DiceAction
     = Standard Dice
     | Free
