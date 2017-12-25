@@ -3,6 +3,9 @@ module Core.Action
     , ServerAction (..)
     , Action(doAction)
     ) where
+-- ^
+-- import           Core.Action (Action)
+-- import qualified Core.Action as A
 
 import           Enum.Enum
 import           Enum.Hex         (Hex)

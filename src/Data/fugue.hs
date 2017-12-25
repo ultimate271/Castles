@@ -6,6 +6,9 @@ module Data.Fugue
     , padList
     , isSubsetOf
     ) where
+-- ^
+-- import Data.Fugue()
+-- -- insert the desired functions inside of the parentheses
 
 --import Enum.Enum
 import Data.List (delete, deleteFirstsBy)

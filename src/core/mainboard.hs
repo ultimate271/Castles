@@ -20,15 +20,16 @@ module Core.MainBoard
     , warehouse
     , slots
     ) where
+-- ^
+-- import qualified Core.MainBoard as MB
+-- import           Core.MainBoard (MainBoard)
 
 import Enum.Enum
 
 import Data.Fugue (isSubsetOf)
 import Data.List (delete)
 
-data Slot = Slot
-    { colors :: [Maybe Color]
-    } deriving (Show, Eq)
+type Slot = Maybe Color
 data Depot = BlackDepot | Depot Dice
     deriving (Show, Eq)
 
@@ -39,7 +40,7 @@ data Depot = BlackDepot | Depot Dice
 data MainBoard = MainBoard
     { market :: Depot -> [HexTile]      -- Refers to the hextiles
     , warehouse :: Depot -> [GoodsTile] -- Refers to the goods placed at the start of each turn
-    , slots     :: Depot -> Slot
+    , slots     :: Depot -> [Slot]
     }
 toString :: [Depot] -> MainBoard -> String
 toString ds m = "MainBoard"
@@ -50,9 +51,9 @@ toString ds m = "MainBoard"
   where showM d = show d ++ " -> " ++ (show $ market m d)
         showW d = show d ++ " -> " ++ (show $ warehouse m d)
         showS d = show d ++ " -> " ++ (show $ slots m d)
-        marketStr = foldr (\d acc -> showM d ++ " | " ++ acc) "" ds
-        warehouseStr = foldr (\d acc -> showW d ++ " | " ++ acc) "" ds
-        slotsStr = foldr (\d acc -> showS d ++ " | " ++ acc) "" ds
+        marketStr = foldr (\d acc -> showM d ++ " -> " ++ show (market m d) ++ " | " ++ acc) "" ds
+        warehouseStr = foldr (\d acc -> showW d ++ " | " ++ show (warehouse m d) ++ " | " ++ acc) "" ds
+        slotsStr = foldr (\d acc -> showS d ++ " | " ++ show (slots m d) ++ " | " ++ acc) "" ds
 
 --Build (Unsafe) ---------------------------------------------------------------
 --------------------------------------------------------------------------------
@@ -62,7 +63,7 @@ blank :: MainBoard
 blank = MainBoard
     { market = \d -> []
     , warehouse = \d -> []
-    , slots = \d -> Slot{colors = []}
+    , slots = \d -> []
     }
 
 addToMarket :: Depot -> HexTile -> MainBoard -> MainBoard
@@ -76,7 +77,7 @@ addToWarehouse d g m = m
 
 addToSlots :: Depot -> Slot -> MainBoard -> MainBoard
 addToSlots d s m = m
-    { slots = \d' -> if d == d' then s else slots m d' }
+    { slots = \d' -> if d == d' then s:slots m d' else slots m d'}
 
 removeFromMarket :: Depot -> HexTile -> MainBoard -> MainBoard
 removeFromMarket d h m@MainBoard{market = k} = m

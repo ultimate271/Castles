@@ -22,9 +22,11 @@ module Core.State
     , pbrange
     , allHexes
     , allGoods
-    , phaseNumber
     , turnNumber
     ) where
+-- ^
+-- import qualified Core.State as S
+-- import           Core.State (State)
 
 import           Enum.Enum
 import           Enum.Hex         (Hex)
@@ -51,26 +53,22 @@ data StateError
     | HexTaken Player Hex
     | IllegalAction Player
     deriving (Eq, Show)
-data Phase
-    = Setup
-    | Phase Int
-    | GameEnd
-    deriving (Eq, Show)
 data GameState
     = GameState
         { playerQueue :: [Player]
         }
     | StateError StateError
     deriving (Eq, Show)
+data Phase = Phase Int deriving (Eq, Show)
 
 data State = State
     { mainBoard      :: MainBoard
     , playerBoards   :: Player -> PlayerBoard
-    , bank           :: MB.Depot -> MB.Slot -> [HexTile]
+    , bank           :: MB.Depot -> Phase -> [HexTile]
     , discard        :: [HexTile]
     , shipmentTrack  :: [GoodsTile]
     , players        :: [Player]
-    , config         :: CFG.Config
+    , config         :: Config
     , turnOrderTrack :: Player -> TurnOrder
     , gameState      :: GameState
     , bonusTiles     :: [BonusTile]
@@ -127,12 +125,12 @@ addPlayer :: Player -> State -> State
 -- ^Returns a state that is just like s but with p added to players
 addPlayer p s@State{players = ps} = s{players = p:ps}
 
-addToBank :: MB.Depot -> MB.Slot -> [HexTile] -> State -> State
+addToBank :: MB.Depot -> Phase -> [HexTile] -> State -> State
 -- ^Adds the HexTiles to the bank
 -- Note that this does not add hextiles to an existing slot, this creates a new
 -- slot on the board with new hextiles in it.
-addToBank d l hs s@State{bank = b} = 
-    s{bank = \d' l' ->  b ++ ts}
+addToBank d p hs s@State{bank = b} =
+    s{bank = \d' p' -> if d == d' && p == p' then b d' p' ++ hs else b d' p'}
 
 --fillBank :: ([HexTile], [GoodsTile]) -> (Distribute, Disperse) -> State -> State
 -- ^Returns a state where the bank and shipment track have been added according
@@ -175,6 +173,11 @@ depots :: State -> [MB.Depot]
 depots State{config = CFG.Config{CFG.diceSize = d}} =
     MB.BlackDepot:[MB.Depot $ Dice i | i <- [1..d]]
 
+phases :: State -> [Phase]
+-- ^Returns a list of all phases
+phases State{config = CFG.Config{CFG.phaseCount = p}} =
+    [Phase i | i <- [1..p]]
+
 pbrange :: State -> [Hex]
 -- ^Returns the domain of the player board
 pbrange s = Hex.range Hex.center (CFG.hexRadius $ config s)
@@ -184,7 +187,7 @@ allHexes :: State -> [HexTile]
 -- The content of this list should remain constant under "safe" operations
 allHexes s = dhs ++ bhs ++ mbhs ++ pbhs -- concat ls
   where dhs = discard s
-        bhs = bank s >>= snd
+        bhs = concat [bank s d p | d <- depots s, p <- phases s]
         mbhs = MB.allHexes (depots s) (mainBoard s)
         pbhs = pbList s >>= PB.allHexes (pbrange s)
 
@@ -200,16 +203,16 @@ turnOrderList :: State -> [Player]
 turnOrderList State{turnOrderTrack = to, players = ps} =
     sortBy (\p1 p2 -> compare (to p2) (to p1)) ps
 
-phaseNumber :: State -> Phase
--- ^Finds the current phase based on the shipping track
-phaseNumber State{shipmentTrack = gs, config = c, gameState = g} =
-    if l == p * t then Setup
-    else if l == 0 && length ps == 0 then GameEnd
-    else Phase $ p - div l t
-  where ps = playerQueue g
-        l = length gs
-        p = CFG.phaseCount c
-        t = CFG.turnsPerPhase c
+--phaseNumber :: State -> Phase
+---- ^Finds the current phase based on the shipping track
+--phaseNumber State{shipmentTrack = gs, config = c, gameState = g} =
+--    if l == p * t then Setup
+--    else if l == 0 && length ps == 0 then GameEnd
+--    else Phase $ p - div l t
+--  where ps = playerQueue g
+--        l = length gs
+--        p = CFG.phaseCount c
+--        t = CFG.turnsPerPhase c
 
 turnNumber :: State -> Int
 -- ^Finds which turn it is in the phase based on the shipping track

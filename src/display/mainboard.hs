@@ -1,4 +1,6 @@
 module Display.MainBoard (display) where
+-- ^
+-- import qualified Display.MainBoard as MB
 
 import Display.Common
 import Enum.Enum

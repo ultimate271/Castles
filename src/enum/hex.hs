@@ -6,6 +6,9 @@ module Enum.Hex
     , isAdjacent
     , range
     ) where
+-- ^
+-- Import Qualified Hex
+-- Import           Hex (Hex)
 
 data Hex = Cube Int Int Int | Axial Int Int
     deriving (Show)

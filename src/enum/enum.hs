@@ -5,7 +5,7 @@ module Enum.Enum
     , HexTile (..)
     , Dice (..)
     , GoodsTile (..)
-    --Imported from enum.knowledge
+    --Imported from Enum.Knowledge
     , Animal (..)
     , Building (..)
     , Knowledge (..)
@@ -14,12 +14,12 @@ module Enum.Enum
     --Imported from Enum.Colorable
     , Colorable (..)
     ) where
+-- ^
+-- Import Enum.Enum
 
 import Enum.Colorable
 import Enum.Knowledge
 
-class Colorable c where
-    color :: c -> Color
 data HexTile
     = Castle              -- Burgundy
     | Mine                -- Silver

@@ -3,6 +3,9 @@ module Core.Processing
     , getActions
     , doAction
     ) where
+-- ^
+-- import           Core.Processing ()
+-- -- insert the desired functions in ()
 
 import           Enum.Enum
 import           Enum.Hex         (Hex)

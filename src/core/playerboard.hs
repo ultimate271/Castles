@@ -37,6 +37,9 @@ module Core.PlayerBoard
     , victoryTrack
     , bonusTiles
     ) where
+-- ^
+-- import qualified Core.PlayerBoard as PB
+-- import           Core.PlayerBoard (PlayerBoard)
 
 import Enum.Enum
 import Enum.Hex (Hex)

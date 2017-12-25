@@ -3,6 +3,8 @@ module Enum.Knowledge
     , Building (..)
     , Knowledge (..)
     ) where
+-- ^
+-- Import Enum.Enum
 
 data Animal = Cow | Pig | Chicken | Sheep
     deriving (Show, Eq, Ord, Enum, Bounded)

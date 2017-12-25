@@ -1,4 +1,6 @@
 module Display.PlayerBoard (display) where
+-- ^
+-- import qualified Display.PlayerBoard as PB
 
 import Core.PlayerBoard
 import Builtin
