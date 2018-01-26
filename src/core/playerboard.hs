@@ -1,7 +1,7 @@
 {-# LANGUAGE MultiParamTypeClasses #-}
 
 module Core.PlayerBoard
-    ( PlayerBoard
+    ( PlayerBoard (..)
     , Slot (..)
     , DiceAction (..)
     --Builders
@@ -25,17 +25,6 @@ module Core.PlayerBoard
     , allHexes
     , allGoods
     , toString
-    --Rudimentery Retrievers (is there a way to export this better?)
-    , actions
-    , storage
-    , dock
-    , shipped
-    , layout
-    , lattice
-    , silverlingCount
-    , workerCount
-    , victoryTrack
-    , bonusTiles
     ) where
 -- ^
 -- import qualified Core.PlayerBoard as PB

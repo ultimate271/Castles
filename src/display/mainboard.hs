@@ -76,7 +76,7 @@ raw =
 --------------------------------------------------------------------------------
 --This is the predoctored string
 --Select all of this and run :s/\\/\\\\/g, then block select the first column
---and add 4 space and /, and then change the first column of \ to \n
+--and add 4 space and \, and then change the first column of \ to \n
 --Finally, change the first and last \ to "
 --
 -- Depot | HexTiles                 | Goods                                    \

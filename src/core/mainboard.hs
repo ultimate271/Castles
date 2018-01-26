@@ -1,6 +1,6 @@
 module Core.MainBoard
     --Data
-    ( MainBoard
+    ( MainBoard (..)
     , Slot (..)
     , Depot (..)
     --Builders
@@ -15,10 +15,6 @@ module Core.MainBoard
     , allHexes
     , allGoods
     , toString
-    --Is there a better way to do this?
-    , market
-    , warehouse
-    , slots
     ) where
 -- ^
 -- import qualified Core.MainBoard as MB
@@ -33,10 +29,6 @@ type Slot = Maybe Color
 data Depot = BlackDepot | Depot Dice
     deriving (Show, Eq)
 
--- | Lets define some requirements for MainBoard
--- The color of every market tile should have a corresponding layout slot
--- in mathematical terms
---  Forevery color Hextile in market depot, the color
 data MainBoard = MainBoard
     { market :: Depot -> [HexTile]      -- Refers to the hextiles
     , warehouse :: Depot -> [GoodsTile] -- Refers to the goods placed at the start of each turn

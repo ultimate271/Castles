@@ -1,0 +1,39 @@
+The core of any board game, (or any proccessor for that matter) is the state
+and the actions. In the case of board games, the state represents not only the
+pieces and their position, but also more meta information such as whose turn it
+is and any other "invisible" things to know such as the score or the names of
+the players and etc.
+
+On one end of the spectrum of board games we have games like Go, where the
+state is totally determined by an array of points, as well as whose turn it is
+to move. On the other end, there is the case of castles of burgundy, in which
+there are many things to keep track of in regards to the state. This free
+writing is my attempt at cataloging all of these things to find a minimal
+complete definition of state that is suitable for use in the program.
+
+So to start, the state of a game of castles of burgundy will be composed into
+three main areas of the game, the communal main board, each individual player
+board, and the premptive shuffling of the tiles used. What is meant by the
+suffling of tiles? It would be best to think of this in terms of a standard
+deck of 52 playing cards. In any card game, the deck will be arranged into a
+list of the 52 unique playing cards. This list will then be used at certain
+points of the game to distribute cards to the state of the game. This action is
+called "dealing" the cards in colloquial terms.
+
+Castles is similar to this, in that the depots, shipment track, and bonustiles
+all begin face down on the player board, and they are turned face up or "dealt"
+at certain stages of the game. In this way, one could think of the hexagonal
+pieces in the game as the deck and the act of turning them over as dealing.
+This is distinct from the state of the game, which is concerned with where the
+tiles are, on the main board or the player board, and the concepts should
+remain seperate and explicit.
+
+That is, one could imagine a model of the player board where there is no
+explicit distinction between a tile that is in the "deck" of a depot, and a
+tile that is face up on a depot, and one could use the phase counter (or some
+other means) to determine which tile in the deck is the one that is in play at
+the current moment. This model has the advantage that it minimizes the number
+of variables at play, but has the downside that, if the designer is not
+careful, it is very easy to illegally alter the state of the deck accidentally,
+as there is no distinction between a tile that is in the deck, and one that is
+in play.
